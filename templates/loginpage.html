@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>로그인 페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+    <style>
+        .btn-warning {
+            color: white;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            showTodo();
+        });
+
+        function checkBox() {
+            if($("#txt_upd").val() == ''){
+                alert("할 일을 입력해주세요!");
+                return false;
+            }
+        }
+
+        function tryLogin() {
+            let id = $("#login-id").val();
+            let pw = $("#login-pw").val();
+
+            if (id == ''){
+                alert("ID를 입력해주세요!");
+            }
+            else if (pw == ''){
+                alert("비밀번호를 입력해주세요!")
+            }
+            else{
+                $.ajax({
+                    type: "PUT",
+                    url: "/api/login",
+                    data: { id: id, pw: pw},
+                    success: function(response){
+                        alert("로그인 성공!")
+                    }
+                })
+            }
+
+        }
+
+        function signIn(){
+            let todo = $("#todo-val").val();
+
+            if (todo == ''){
+                alert("할 일을 입력해주세요!");
+            }
+            else{
+                $.ajax({
+                    type: "POST",
+                    url: "/api/post",
+                    data: { input_todo: todo,},
+                    success: function(response){ // 성공하면
+                        if (response["result"] == "success") {
+                            alert("등록 완료!");
+                            window.location.reload();
+                        } else {
+                            alert("등록 실패!")
+                        }
+                    }
+                })
+            }
+        }
+
+        function completeTodo(id){
+            let done_todo = $(`#lst_${id}`).text().slice(0, -140);
+
+            $.ajax({
+                type: "PUT",
+                url: "/api/comp",
+                data: { done_todo: done_todo},
+                success: function(response){ // 성공하면
+                    if (response["result"] == "success") {
+                        alert("할 일 체크 완료!");
+
+                        window.location.reload();
+                    } else {
+                        alert("할 일 체크 실패!");
+                    }
+                }
+            })
+        }
+
+        function editTodo(id){
+            let value = $(`#lst_${id}`).text().slice(0, -140);
+
+            let edit_html =
+                `<form class="form-inline w-75" action="edit_todo" onsubmit="return checkBox()">
+                    <input type="text" name="org" style="display:none;" value="${value}">
+                    <input id="txt_upd" type="text" name="edit" class="form-control mr-2 w-75" value="${value}">
+                    <button id="btn_upd" type="submit" class="btn btn-secondary btn-sm mr-1">업데이트</button>
+                    <button type="button" onclick="window.location.reload()" class="btn btn-warning btn-sm">취소</button>
+                </form>`;
+
+            $(`#lst_${id}`).text("");
+            $(`#lst_${id}`).append(edit_html);
+        }
+
+        function deleteTodo(id, done){
+            let del_todo;
+
+            if(done){
+                del_todo= $(`#lst_${id}`).text().slice(0, -86);
+            }
+            else{
+                del_todo = $(`#lst_${id}`).text().slice(0, -140);
+            }
+
+            $.ajax({
+                type: "DELETE",
+                url: "/api/del",
+                data: { del_todo: del_todo, del_done: done},
+                success: function(response) {
+                    if (response["result"] == "success"){
+                        alert("할 일 삭제 완료!");
+                        window.location.reload();
+                    }
+                    else {
+                        alert("할 일 삭제 실패!");
+                    }
+                }
+            })
+        }
+        function makeList(id, todo, done) {
+            let temp_html;
+
+            if(done == 1){
+                temp_html =
+                    `<li id="lst_${id}" class="list-group-item d-flex justify-content-between align-items-center"><del>${todo}</del>
+                    <span id="spn_${id}">
+                        <button id="btn_del_${id}" class="btn btn-danger btn-sm" onclick="deleteTodo(${id}, ${done})">삭제</button>
+                    </span>
+                </li>`
+            }
+            else{
+                temp_html =
+                    `<li id="lst_${id}" class="list-group-item d-flex justify-content-between align-items-center">${todo}
+                    <span id="spn_${id}">
+                        <button id="btn_com_${id}" class="btn btn-success btn-sm mr-1" onclick="completeTodo(${id})">완료</button>
+                        <button id="btn_edi_${id}" class="btn btn-secondary btn-sm mr-1" onclick="editTodo(${id})">수정</button>
+                        <button id="btn_del_${id}" class="btn btn-danger btn-sm" onclick="deleteTodo(${id}, ${done})">삭제</button>
+                    </span>
+                </li>`;
+            }
+
+            $("#todo-list").append(temp_html);
+        }
+    </script>
+</head>
+
+<body>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">정글러 동선</h2>
+    <!-- 로그인 -->
+    <form id="login-form">
+        <input id="login-id" type="text" placeholder="아이디">
+        <input id="login-pw" type="password" placeholder="비밀번호">
+        <div class="grid">
+            <button type="button" class="outline" onclick="tryLogin()">로그인</button>
+            <button type="button" class="outline contrast" onclick="signIn()">회원가입</button>
+        </div>
+    </form>
+
+    <!-- 회원가입 -->
+    <form id="signin-form">
+        <input id="sign-id" type="text" placeholder="아이디" required>
+        <input id="sign-pw" type="text" placeholder="비밀번호" required>
+        <input id="sign-name" type="text" placeholder="이름" required>
+        <select id="sign-team" required>
+            <option selected disabled value="">
+                정글러의 조를 고르세요
+            </option>
+            <option>1조</option>
+            <option>2조</option>
+            <option>3조</option>
+            <option>4조</option>
+            <option>5조</option>
+            <option>6조</option>
+            <option>7조</option>
+            <option>8조</option>
+            <option>9조</option>
+            <option>10조</option>
+            <option>11조</option>
+            <option>12조</option>
+        </select>
+        <div class="grid">
+            <button type="button" class="outline secondary" onclick="tryLogin()">뒤로가기</button>
+            <button type="button" class="outline contrast" onclick="signIn()">가입하기</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
