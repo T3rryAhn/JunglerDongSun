@@ -9,7 +9,7 @@ app = Flask(__name__)
 # .env 파일로부터 환경 변수 로드
 load_dotenv()
 
-# client = MongoClient('몽고디비 주소 넣을것') # 배포전 주소 바꿀것.
+# client = MongoClient('몽고디비 주소 넣을것') # 배포전 주소 바꿀것!
 client = MongoClient(os.environ.get("MONGO_DB_PATH"))
 db = client.week00_junglerDongsun.junglers # cluster0 > week00_junglerDongsun > junglers 컬렉션(유저)
 
