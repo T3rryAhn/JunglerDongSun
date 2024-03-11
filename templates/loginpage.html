@@ -22,6 +22,20 @@
             showTodo();
         });
 
+        function toggleForm(){
+            const loginform = document.getElementById(`login-form`);
+            const signinform = document.getElementById(`signin-form`);
+
+            if(loginform.style.display !== 'none'){
+                loginform.style.display = 'none';
+                signinform.style.display = 'block';
+            }
+            else{
+                loginform.style.display = 'block';
+                signinform.style.display = 'none';
+            }
+        }
+
         function checkBox() {
             if($("#txt_upd").val() == ''){
                 alert("할 일을 입력해주세요!");
@@ -162,43 +176,68 @@
 </head>
 
 <body>
-<div class="container mt-5">
-    <h2 class="text-center mb-4">정글러 동선</h2>
+<div class="container" style="width: 600px; border: 2px solid black; border-radius: 20px; padding: 20px">
+    <h2 style="text-align: center">정글러 동선</h2>
     <!-- 로그인 -->
-    <form id="login-form">
-        <input id="login-id" type="text" placeholder="아이디">
-        <input id="login-pw" type="password" placeholder="비밀번호">
+    <form id="login-form" style="display: block">
+        <label>
+            ID:
+            <input id="login-id" type="text" placeholder="아이디">
+        </label>
+        <label>
+            PW:
+            <input id="login-pw" type="password" placeholder="비밀번호">
+        </label>
+
         <div class="grid">
-            <button type="button" class="outline" onclick="tryLogin()">로그인</button>
-            <button type="button" class="outline contrast" onclick="signIn()">회원가입</button>
+            <button type="button" onclick="tryLogin()">로그인</button>
+            <button type="button" class="secondary" onclick="toggleForm()">회원가입</button>
         </div>
+
+        <label>
+            <input  type="checkbox" id="english"/>
+            아이디 기억하기
+        </label>
     </form>
 
     <!-- 회원가입 -->
-    <form id="signin-form">
-        <input id="sign-id" type="text" placeholder="아이디" required>
-        <input id="sign-pw" type="text" placeholder="비밀번호" required>
-        <input id="sign-name" type="text" placeholder="이름" required>
-        <select id="sign-team" required>
-            <option selected disabled value="">
-                정글러의 조를 고르세요
-            </option>
-            <option>1조</option>
-            <option>2조</option>
-            <option>3조</option>
-            <option>4조</option>
-            <option>5조</option>
-            <option>6조</option>
-            <option>7조</option>
-            <option>8조</option>
-            <option>9조</option>
-            <option>10조</option>
-            <option>11조</option>
-            <option>12조</option>
-        </select>
+    <form id="signin-form" style="display: none">
+        <label>
+            ID:
+            <input id="sign-id" type="text" placeholder="아이디" required>
+        </label>
+        <label>
+            PW:
+            <input id="sign-pw" type="text" placeholder="비밀번호" required>
+        </label>
+        <label>
+            이름:
+            <input id="sign-name" type="text" placeholder="이름" required>
+        </label>
+        <label>
+            조:
+            <select id="sign-team" required>
+                <option selected disabled value="">
+                    정글러의 조를 고르세요
+                </option>
+                <option>1조</option>
+                <option>2조</option>
+                <option>3조</option>
+                <option>4조</option>
+                <option>5조</option>
+                <option>6조</option>
+                <option>7조</option>
+                <option>8조</option>
+                <option>9조</option>
+                <option>10조</option>
+                <option>11조</option>
+                <option>12조</option>
+            </select>
+        </label>
+
         <div class="grid">
-            <button type="button" class="outline secondary" onclick="tryLogin()">뒤로가기</button>
-            <button type="button" class="outline contrast" onclick="signIn()">가입하기</button>
+            <button type="button" class="contrast" onclick="toggleForm()">뒤로가기</button>
+            <button type="button" class="secondary" onclick="signIn()">가입하기</button>
         </div>
     </form>
 </div>
