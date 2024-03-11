@@ -2,11 +2,15 @@ from flask import Flask, render_template
 import requests
 from pymongo import MongoClient
 import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
-client = MongoClient('몽고디비 주소 넣을것') # 커밋전에 주소 삭제 꼭 해주세요!!!
-# client = MongoClient(os.environ.get("MONGO_DB_PATH"))
+# .env 파일로부터 환경 변수 로드
+load_dotenv()
+
+# client = MongoClient('몽고디비 주소 넣을것') # 배포전 주소 바꿀것.
+client = MongoClient(os.environ.get("MONGO_DB_PATH"))
 db = client.week00_junglerDongsun.junglers # cluster0 > week00_junglerDongsun > junglers 컬렉션(유저)
 
 '''
