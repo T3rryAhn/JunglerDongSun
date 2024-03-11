@@ -1,9 +1,13 @@
-from flask import Flask, render_template, requests
+from flask import Flask, render_template
 import requests
 from pymongo import MongoClient
-from bson import ObjecId # 몽고디비id객체를 문자열로 변환, 스트링값을 id 객체로 변환해주는 기능
+import os
 
 app = Flask(__name__)
+
+client = MongoClient('몽고디비 주소 넣을것') # 커밋전에 주소 삭제 꼭 해주세요!!!
+# client = MongoClient(os.environ.get("MONGO_DB_PATH"))
+db = client.week00_junglerDongsun.junglers # cluster0 > week00_junglerDongsun > junglers 컬렉션(유저)
 
 '''
 예시
@@ -15,6 +19,18 @@ def index():
     today_date = '2024-03-11'
     return render_template('index.html', title=title, user=user, items=items, today_date=today_date)
 '''
+# 디비 접속 확인
+# MongoDB에 연결하여 데이터베이스에 접속하는 부분 확인하기 위한 코드
+@app.route('/')
+def check_db_connection():
+    # MongoDB에서 'junglers' 컬렉션에 있는 모든 문서를 가져옴
+    junglers = db.find()
+    # 가져온 문서를 출력
+    for jungler in junglers:
+        print(jungler)
+    return 'Check console for MongoDB documents'
+
+
 
 # toDo 로그인 기능
 
@@ -25,4 +41,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run('0.0.0.0', port=5000, debug=False)
