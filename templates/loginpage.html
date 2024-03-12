@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>로그인 페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+    <script>
+        function toggleForm(){
+            const loginForm = document.getElementById(`login-form`);
+            const signupForm = document.getElementById(`signup-form`);
+
+            if(loginForm.style.display !== 'none'){
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+            }
+            else{
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+            }
+        }
+    </script>
+</head>
+
+<body>
+<div class="container" style="width: 600px; border: 2px solid black; border-radius: 20px; padding: 20px; margin-top: 20px">
+    <h2 style="text-align: center">정글러 동선</h2>
+
+    <!-- 로그인 -->
+    <form id="login-form" action="/login" style="display: block">
+        <label>
+            ID:
+            <input id="login-id" name="id" type="text" placeholder="아이디" required>
+        </label>
+        <label>
+            PW:
+            <input id="login-pw" name="pw" type="password" placeholder="비밀번호" required>
+        </label>
+
+        <div class="grid">
+            <button type="submit">로그인</button>
+            <button type="button" class="secondary" onclick="toggleForm()">회원가입</button>
+        </div>
+
+        <label>
+            <input  type="checkbox" id="check-id"/>
+            아이디 기억하기
+        </label>
+    </form>
+
+    <!-- 회원가입 -->
+    <form id="signup-form" action="/signup" method="post" style="display: none">
+        <label>
+            ID:
+            <input id="sign-id" name="id" type="text" placeholder="아이디" required>
+        </label>
+        <label>
+            PW:
+            <input id="sign-pw" name="pw" type="text" placeholder="비밀번호" required>
+        </label>
+        <label>
+            이름:
+            <input id="sign-name" name="name" type="text" placeholder="이름" required>
+        </label>
+
+        <div class="grid">
+            <button type="button" class="contrast" onclick="toggleForm()">뒤로가기</button>
+            <button type="submit" class="secondary">가입하기</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
