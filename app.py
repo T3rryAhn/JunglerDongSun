@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, request
 import requests
 from pymongo import MongoClient
 import os
@@ -35,6 +35,22 @@ def check_db_connection():
     return 'Check console for MongoDB documents'
 
 
+@app.route("/main")
+def main():
+    return render_template('main.html')
+
+@app.route("/list", methods=["GET"])
+def listing():
+    result = list(db.find({}, {'_id':0}))
+    return jsonify({'result':'success', 'junglers': result})
+
+@app.route("/update", methods=["POST"])
+def updateBook():
+    id = request.form["id"]
+    team = request.form["team"]
+    place = request.form["place"]
+    db.books.update_one({"id":int(id)}, {"$set":{"team":team, "place":place}})
+    return jsonify({"result":"success"})
 
 # toDo 로그인 기능
 
@@ -45,4 +61,4 @@ def check_db_connection():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=False)
+    app.run('0.0.0.0', port=5001, debug=False)
