@@ -24,11 +24,11 @@ def loginpage():
             return render_template("loginpage.html", login=False)
 
 
-@app.route("/login", methods=["GET"])
+@app.route("/login", methods=["POST"])
 def login():
-    _id_ = request.args.get("id")
-    _pw_ = request.args.get("pw")
-    _mem_ = request.args.get("mem")
+    _id_ = request.form["id"]
+    _pw_ = request.form["pw"]
+    _mem_ = request.form["mem"]
 
     if _mem_ == 'on':
         session['_memorize_'] = _id_
