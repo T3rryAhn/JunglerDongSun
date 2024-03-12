@@ -45,9 +45,22 @@ def updatePlace():
 # toDo 로그인 기능
 
 
-# toDo 메인화면 기능
+# toDo 조회 검색어
 
+@app.route("/search/name/<name>", methods=["GET"])
+def searchByName(name):
+    result = list(db.find({"user_name": name}, {'_id':0}))
+    return jsonify({'result':'success', 'junglers': result})
 
+@app.route("/search/team/<team>", methods=["GET"])
+def searchByTeam(team):
+    result = list(db.find({"user_team": team}, {'_id':0}))
+    return jsonify({'result':'success', 'junglers': result})
+
+@app.route("/search/place/<place>", methods=["GET"])
+def searchByPlace(place):
+    result = list(db.find({"user_place": place}, {'_id':0}))
+    return jsonify({'result':'success', 'junglers': result})
 
 
 if __name__ == '__main__':

@@ -176,4 +176,26 @@
     </div>
 </body>
 
+<script>
+    function search(target, text){
+        $.ajax({
+            url: `/search/${target}/${text}`,
+            type: 'GET',
+            success: function (response) {
+
+                if (response["result"] == "success") {
+                    alert("검색 성공");
+                } else {
+                    alert("검색 실패");
+                }
+            },
+            error: function (error) {
+                alert("서버 통신에 실패했습니다.");
+            }
+        })
+    }
+
+    
+</script>
+
 </html>
