@@ -23,10 +23,6 @@
 
     <!-- style -->
     <style type="text/css">
-        .columns {
-            margin-left: 0;
-            margin-top: 20px;
-        }
     </style>
     <script>
         $(document).ready(function () {
@@ -80,99 +76,125 @@
                 </p> -->
             </div>
         </section>
-        <div class="columns is-2">
-            <div class="box column is-one-quarter">
-                <input type="hidden" id="id_num" value="2">
-                <p>안태리</p>
-                <p>팀</p>
-                <div class="select">
-                    <select id="user_team_selector" aria-label="1팀" required>
-                        <option selected>1팀</option>
-                        <option>2팀</option>
-                        <option>3팀</option>
-                        <option>4팀</option>
-                        <option>5팀</option>
-                        <option>6팀</option>
-                        <option>7팀</option>
-                        <option>8팀</option>
-                        <option>9팀</option>
-                        <option>10팀</option>
-                        <option>11팀</option>
-                        <option>12팀</option>
-                    </select>
-                </div>
-                <p>장소</p>
-                <div class="select">
-                    <select id="user_place_selector" aria-label="407 강의동" required>
-                        <option>기숙사</option>
-                        <option>식당</option>
-                        <option selected>407 강의동</option>
-                        <option>401 강의동</option>
-                        <option>체력단련실</option>
-                        <option>교외</option>
-                        <option>비공개</option>
-                    </select>
+
+        <section class="section">
+            <div class="container">
+                <div class="columns">
+                    <div class="column is-one-quarter">
+                        <div class="box">
+                            <input type="hidden" id="id_num" value="2">
+                            <div class="field has-addons">
+                                <h2 class="is-size-4">안태리</h2>
+                                <button>로그아웃</button>
+                            </div>
+                            <div class="field has-addons">
+                                <p class="control">팀</p>
+                                <p class="control">
+                                    <span class="select is-dark is-small">
+                                        <select id="user_team_selector" aria-label="1팀" required>
+                                            <option selected>1팀</option>
+                                            <option>2팀</option>
+                                            <option>3팀</option>
+                                            <option>4팀</option>
+                                            <option>5팀</option>
+                                            <option>6팀</option>
+                                            <option>7팀</option>
+                                            <option>8팀</option>
+                                            <option>9팀</option>
+                                            <option>10팀</option>
+                                            <option>11팀</option>
+                                            <option>12팀</option>
+                                        </select>
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="field has-addons">
+                                <p class="control">장소</p>
+                                <p class="control">
+                                    <span class="select is-dark is-small">
+                                        <select id="user_place_selector" aria-label="407 강의동" required>
+                                            <option>기숙사</option>
+                                            <option>식당</option>
+                                            <option selected>407 강의동</option>
+                                            <option>401 강의동</option>
+                                            <option>체력단련실</option>
+                                            <option>교외</option>
+                                            <option>비공개</option>
+                                        </select>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="block">
+                            <button class="button is-medium is-rounded is-success">이름</button>
+                            <button class="button is-medium is-rounded">장소</button>
+                            <button class="button is-medium is-rounded">팀</button>
+                        </div>
+                        <!-- <div id="place_category" class="block">
+                            <button class="button is-medium is-rounded is-success">기숙사</button>
+                            <button class="button is-medium is-rounded">식당</button>
+                            <button class="button is-medium is-rounded">407 강의동</button>
+                            <button class="button is-medium is-rounded">401 강의동</button>
+                            <button class="button is-medium is-rounded">체력단련실</button>
+                            <button class="button is-medium is-rounded">교외</button>
+                            <button class="button is-medium is-rounded">비공개</button>
+                        </div>
+                        <div id="team_category" class="block">
+                            <button class="button is-medium is-rounded is-success">1팀</button>
+                            <button class="button is-medium is-rounded">2팀</button>
+                            <button class="button is-medium is-rounded">3팀</button>
+                            <button class="button is-medium is-rounded">4팀</button>
+                            <button class="button is-medium is-rounded">5팀</button>
+                            <button class="button is-medium is-rounded">6팀</button>
+                            <button class="button is-medium is-rounded">7팀</button>
+                            <button class="button is-medium is-rounded">8팀</button>
+                            <button class="button is-medium is-rounded">9팀</button>
+                            <button class="button is-medium is-rounded">10팀</button>
+                            <button class="button is-medium is-rounded">11팀</button>
+                            <button class="button is-medium is-rounded">12팀</button>
+                        </div> -->
+                        <div class="field has-addons">
+                            <p class="control">
+                                <span class="select">
+                                    <select>
+                                        <option>이름</option>
+                                        <option>장소</option>
+                                        <option>팀</option>
+                                    </select>
+                                </span>
+                            </p>
+                            <p class="control is-expanded">
+                                <input class="input" type="text" placeholder="검색어를 입력하세요.">
+                            </p>
+                            <p class="control">
+                                <a class="button is-light">
+                                    검색
+                                </a>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="block column">
-                <div class="block">
-                    <button class="button is-medium is-rounded is-success">이름</button>
-                    <button class="button is-medium is-rounded">장소</button>
-                    <button class="button is-medium is-rounded">팀</button>
-                </div>
-                <!-- <div id="place_category">
-                    <button>기숙사</button>
-                    <button>식당</button>
-                    <button>407 강의동</button>
-                    <button>401 강의동</button>
-                    <button>체력단련실</button>
-                    <button>교외</button>
-                    <button selected>비공개</button>
-                </div>
-                <div id="team_category">
-                    <button>1팀</button>
-                    <button>2팀</button>
-                    <button>3팀</button>
-                    <button>4팀</button>
-                    <button>5팀</button>
-                    <button selected>6팀</button>
-                    <button>7팀</button>
-                    <button>8팀</button>
-                    <button>9팀</button>
-                    <button>10팀</button>
-                    <button>11팀</button>
-                    <button>12팀</button>
-                </div> -->
-                <div class="field has-addons">
-                    <p class="control">
-                        <span class="select">
-                            <select>
-                                <option>이름</option>
-                                <option>장소</option>
-                                <option>팀</option>
-                            </select>
-                        </span>
-                    </p>
-                    <p class="control is-expanded">
-                        <input class="input" type="text" placeholder="검색어를 입력하세요.">
-                    </p>
-                    <p class="control">
-                        <a class="button is-light">
-                            검색
-                        </a>
-                    </p>
+        </section>
+        <section class="section">
+            <div class="container">
+                <div class="columns is-multiline">
+                    {% for j in junglers %}
+                    <div class="column is-one-quarter">
+                        <div class="card">
+                            <div class="card-content">
+                                <h2>{{j.user_name}}</h2>
+                                <p>{{j.user_team}}</p>
+                                <p>{{j.user_place}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
-        </div>
-        <div class="columns is-multiline">
-            {% for j in junglers %}
-            <div class="box column is-one-quarter">
-                <p>{{j.user_name}}</p>
-                <p>{{j.user_team}}</p>
-                <p>{{j.user_place}}</p>
-            </div>
-            {% endfor %}
-        </div>
+        </section>
     </div>
 </body>
 
