@@ -79,7 +79,7 @@ def signup():
     if _cursor_:
         return jsonify({'message': '이미 사용 중인 아이디 입니다.'})
     else:
-        _DB_.insert_one({"user_id": _id_, "user_pw": _pw_, "user_name": _name_, "user_team": "1팀"})
+        _DB_.insert_one({"user_id": _id_, "user_pw": _pw_, "user_name": _name_, "user_team": "1팀", "user_place": "비공개"})
         session['username'] = _name_
         return redirect(url_for("loginpage"))
 
