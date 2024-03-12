@@ -14,52 +14,111 @@
         integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
         crossorigin="anonymous"></script>
 
-    <!-- Pico -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <!-- Bulma -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
+    <script src="https://kit.fontawesome.com/59db0249c2.js" crossorigin="anonymous"></script>
 
     <title>정글러 동선</title>
 
     <!-- style -->
     <style type="text/css">
+        .columns {
+            margin-left: 0;
+            margin-top: 20px;
+        }
     </style>
+    <script>
+        $(document).ready(function () {
+            // showJunglers();
+            console.log($("#user_team_selector").val());
+
+            $("#user_team_selector").change(function () {
+                let id_num = $("#id_num").val();
+                let user_team = $("#user_team_selector").val();
+                // let user_team = $("#user_team_selector >option:selected").attr('value');
+                $.ajax({
+                    type: "POST",
+                    url: "/update/team",
+                    data: { "id_num": id_num, "user_team": user_team },
+                    success: function (response) {
+                        if (response["result"] == "success") {
+                            alert("팀저장됨");
+                        }
+                    }
+                })
+            });
+
+            $("#user_place_selector").change(function () {
+                let id_num = $("#id_num").val();
+                let user_place = $("#user_place_selector").val();
+                $.ajax({
+                    type: "POST",
+                    url: "/update/place",
+                    data: { "id_num": id_num, "user_place": user_place },
+                    success: function (response) {
+                        if (response["result"] == "success") {
+                            alert("장소저장됨");
+                        }
+                    }
+                })
+            });
+
+        })
+    </script>
 </head>
 
 <body>
-    <main class="container">
-        <div>
-            <div>
+    <div class="container">
+        <section class="hero is-small is-success">
+            <div class="hero-body">
+                <p class="title">
+                    정글러 동선
+                </p>
+                <!-- <p class="subtitle">
+                    Primary subtitle
+                </p> -->
+            </div>
+        </section>
+        <div class="columns is-2">
+            <div class="box column is-one-quarter">
+                <input type="hidden" id="id_num" value="2">
                 <p>안태리</p>
                 <p>팀</p>
-                <select aria-label="6팀" required>
-                    <option>1팀</option>
-                    <option>2팀</option>
-                    <option>3팀</option>
-                    <option>4팀</option>
-                    <option>5팀</option>
-                    <option selected>6팀</option>
-                    <option>7팀</option>
-                    <option>8팀</option>
-                    <option>9팀</option>
-                    <option>10팀</option>
-                    <option>11팀</option>
-                    <option>12팀</option>
-                </select>
+                <div class="select">
+                    <select id="user_team_selector" aria-label="1팀" required>
+                        <option selected>1팀</option>
+                        <option>2팀</option>
+                        <option>3팀</option>
+                        <option>4팀</option>
+                        <option>5팀</option>
+                        <option>6팀</option>
+                        <option>7팀</option>
+                        <option>8팀</option>
+                        <option>9팀</option>
+                        <option>10팀</option>
+                        <option>11팀</option>
+                        <option>12팀</option>
+                    </select>
+                </div>
                 <p>장소</p>
-                <select aria-label="비공개" required>
-                    <option>기숙사</option>
-                    <option>식당</option>
-                    <option>407 강의동</option>
-                    <option>401 강의동</option>
-                    <option>체력단련실</option>
-                    <option>교외</option>
-                    <option selected>비공개</option>
-                </select>
+                <div class="select">
+                    <select id="user_place_selector" aria-label="407 강의동" required>
+                        <option>기숙사</option>
+                        <option>식당</option>
+                        <option selected>407 강의동</option>
+                        <option>401 강의동</option>
+                        <option>체력단련실</option>
+                        <option>교외</option>
+                        <option>비공개</option>
+                    </select>
+                </div>
             </div>
-            <div>
-                <div class="grid">
-                    <div>이름</div>
-                    <div>장소</div>
-                    <div>팀</div>
+            <div class="block column">
+                <div class="block">
+                    <button class="button is-medium is-rounded is-success">이름</button>
+                    <button class="button is-medium is-rounded">장소</button>
+                    <button class="button is-medium is-rounded">팀</button>
                 </div>
                 <!-- <div id="place_category">
                     <button>기숙사</button>
@@ -84,31 +143,37 @@
                     <button>11팀</button>
                     <button>12팀</button>
                 </div> -->
-                <div>
-                    <div role="search">
-                        <input name="search" type="search" placeholder="Search" />
-                        <input type="submit" value="Search" />
-                    </div>
+                <div class="field has-addons">
+                    <p class="control">
+                        <span class="select">
+                            <select>
+                                <option>이름</option>
+                                <option>장소</option>
+                                <option>팀</option>
+                            </select>
+                        </span>
+                    </p>
+                    <p class="control is-expanded">
+                        <input class="input" type="text" placeholder="검색어를 입력하세요.">
+                    </p>
+                    <p class="control">
+                        <a class="button is-light">
+                            검색
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>
-        <div class="grid">
-            <div>
-                <p>정재혁</p>
-                <p>6팀</p>
-                <p>407 강의동</p>
+        <div class="columns is-multiline">
+            {% for j in junglers %}
+            <div class="box column is-one-quarter">
+                <p>{{j.user_name}}</p>
+                <p>{{j.user_team}}</p>
+                <p>{{j.user_place}}</p>
             </div>
-            <div>
-                <p>정재혁</p>
-                <p>6팀</p>
-                <p>407 강의동</p>
-            </div>
-            <div>
-                <p>정재혁</p>
-                <p>6팀</p>
-                <p>407 강의동</p>
-            </div>
+            {% endfor %}
         </div>
+    </div>
 </body>
 
 </html>
