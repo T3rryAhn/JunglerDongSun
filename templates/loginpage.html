@@ -6,12 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>로그인 페이지</title>
-    <link href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" rel="stylesheet">
+
+    <!-- Bulma CSS Library -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/59db0249c2.js" crossorigin="anonymous"></script>
 
     <script src="https://code.jquery.com/jquery-3.7.1.js"
             integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
     <script>
+        function checkId(){
+            $.ajax({
+                type: "POST",
+                url: "/checkid",
+                data: { id: $("#sign-id").val()},
+                success: function(response){
+                    if(response['result'] === 'good'){
+                        $("#sign-id").attr('class', 'input is-success');
+                        $("#result-icon").attr('class', 'fas fa-check');
+                        $("#result-text").attr('class', 'help is-success');
+                        $("#result-text").text("사용 가능 한 아이디입니다.");
+                    }
+                    else{
+                        $("#sign-id").attr('class', 'input is-danger');
+                        $("#result-icon").attr('class', 'fas fa-ban');
+                        $("#result-text").attr('class', 'help is-danger');
+                        $("#result-text").text("이미 사용 중인 아이디입니다.");
+
+                        $("#signup-form").on('submit', function(event){
+                            event.preventDefault();
+                        })
+                    }
+
+
+                }
+            })
+        }
+
         function toggleForm(){
             const loginForm = document.getElementById(`login-form`);
             const signupForm = document.getElementById(`signup-form`);
@@ -30,49 +61,104 @@
 
 <body>
 <div class="container" style="width: 600px; border: 2px solid black; border-radius: 20px; padding: 20px; margin-top: 20px">
-    <h2 style="text-align: center">정글러 동선</h2>
+    <br>
 
+    <h1 class="is-size-1" style="text-align: center">정글러 동선</h1>
+
+    <br><br><br><br>
     <!-- 로그인 -->
     <form id="login-form" action="/login" style="display: block">
-        <label>
-            ID:
-            <input id="login-id" name="id" type="text" placeholder="아이디" required>
-        </label>
-        <label>
-            PW:
-            <input id="login-pw" name="pw" type="password" placeholder="비밀번호" required>
-        </label>
-
-        <div class="grid">
-            <button type="submit">로그인</button>
-            <button type="button" class="secondary" onclick="toggleForm()">회원가입</button>
+        <div class="field">
+            <label class="label">ID</label>
+            <div class="control has-icons-left">
+                {% if userid %}
+                <input name="id" class="input" type="text" value="{{userid}}">
+                {% else %}
+                <input name="id" class="input" type="text" placeholder="ID">
+                {% endif %}
+                <span class="icon is-small is-left">
+                     <i class="fas fa-user"></i>
+                </span>
+                <p class="help">　</p>
+            </div>
         </div>
 
-        <label>
-            <input  type="checkbox" id="check-id"/>
+        <div class="field">
+            <label class="label">Password</label>
+            <div class="control has-icons-left">
+                <input name="pw" class="input" type="password" placeholder="Password">
+                <span class="icon is-small is-left">
+                    <i class="fas fa-lock"></i>
+                </span>
+                <p class="help">　</p>
+            </div>
+        </div>
+
+        <label class="checkbox">
+            {% if userid %}
+            <input name="mem" type="checkbox" checked/>
+            {% else %}
+            <input name="mem" type="checkbox"/>
+            {% endif %}
             아이디 기억하기
         </label>
+
+        <br><br><br>
+
+        <div class="field">
+            <button type="submit" class="button is-success is-outlined" style="width: 270px; float: left">로그인</button>
+            <button type="button" class="button is-info is-outlined" style="width: 270px; float: right" onclick="toggleForm()">회원가입</button>
+        </div>
+
+        <br><br>
     </form>
 
     <!-- 회원가입 -->
-    <form id="signup-form" action="/signup" method="post" style="display: none">
-        <label>
-            ID:
-            <input id="sign-id" name="id" type="text" placeholder="아이디" required>
-        </label>
-        <label>
-            PW:
-            <input id="sign-pw" name="pw" type="text" placeholder="비밀번호" required>
-        </label>
-        <label>
-            이름:
-            <input id="sign-name" name="name" type="text" placeholder="이름" required>
-        </label>
-
-        <div class="grid">
-            <button type="button" class="contrast" onclick="toggleForm()">뒤로가기</button>
-            <button type="submit" class="secondary">가입하기</button>
+    <form id="signup-form" action="/signup" method="POST" style="display: none" onsubmit="checkId()">
+        <div class="field">
+            <label class="label">ID</label>
+            <div class="control has-icons-left has-icons-right">
+                <input id="sign-id" name="id" class="input" type="text" placeholder="ID" oninput="checkId()" required>
+                <span class="icon is-small is-left">
+                     <i class="fas fa-user"></i>
+                </span>
+                <span class="icon is-small is-right">
+                    <i id="result-icon" class="fas fa-check"></i>
+                </span>
+                <p id="result-text" class="help is-success">　</p>
+            </div>
         </div>
+
+        <div class="field">
+            <label class="label">Password</label>
+            <div class="control has-icons-left">
+                <input id="sign-pw" name="pw" class="input" type="text" placeholder="Password" required>
+                <span class="icon is-small is-left">
+                    <i class="fas fa-lock"></i>
+                </span>
+            </div>
+            <p class="help is-danger">　</p>
+        </div>
+
+        <div class="field">
+            <label class="label">이름</label>
+            <div class="control has-icons-left">
+                <input id="sign-name" name="name" class="input" type="text" placeholder="이름" required>
+                <span class="icon is-small is-left">
+                    <i class="fas fa-info-circle"></i>
+                </span>
+            </div>
+            <p class="help"></p>
+        </div>
+
+        <br><br>
+
+        <div class="field">
+            <button type="button" class="button is-outlined" onclick="toggleForm()" style="width: 270px; float: left">뒤로가기</button>
+            <button id="signup-submit" type="submit" class="button is-info is-outlined" style="width: 270px; float: right">가입하기</button>
+        </div>
+
+        <br><br>
     </form>
 </div>
 </body>
