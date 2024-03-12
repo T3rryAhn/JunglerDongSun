@@ -20,14 +20,19 @@
                 type: "POST",
                 url: "/checkid",
                 data: { id: $("#sign-id").val()},
-                success: function(response){
+                success: function(response){debugger;
                     if(response['result'] === 'good'){
                         $("#sign-id").attr('class', 'input is-success');
                         $("#result-icon").attr('class', 'fas fa-check');
                         $("#result-text").attr('class', 'help is-success');
                         $("#result-text").text("사용 가능 한 아이디입니다.");
+
+                        $("#signup-form").on('submit', function(event){
+                            event.preventDefault = false;   
+                        })
                     }
                     else{
+                        debugger;
                         $("#sign-id").attr('class', 'input is-danger');
                         $("#result-icon").attr('class', 'fas fa-ban');
                         $("#result-text").attr('class', 'help is-danger');
