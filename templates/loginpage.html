@@ -76,8 +76,8 @@
         <div class="field">
             <label class="label">ID</label>
             <div class="control has-icons-left">
-                {% if userid %}
-                <input name="id" class="input" type="text" value="{{userid}}">
+                {% if userID %}
+                <input name="id" class="input" type="text" value="{{userID}}">
                 {% else %}
                 <input name="id" class="input" type="text" placeholder="ID">
                 {% endif %}
@@ -100,7 +100,7 @@
         </div>
 
         <label class="checkbox">
-            {% if userid %}
+            {% if userID %}
             <input name="mem" type="checkbox" checked/>
             {% else %}
             <input name="mem" type="checkbox"/>

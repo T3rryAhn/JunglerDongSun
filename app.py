@@ -16,10 +16,10 @@ app.secret_key = _KEY_
 @app.route('/')
 def loginpage():
     if 'userID' in session:
-        return render_template("main.html", username=session.get('userid'), login=True)
+        return render_template("main.html", userID=session.get('userID'), login=True)
     else:
         if '_memorize_' in session:
-            return render_template("loginpage.html", userid=session.get('_memorize_'), login=False)
+            return render_template("loginpage.html", userID=session.get('_memorize_'), login=False)
         else:
             return render_template("loginpage.html", login=False)
 
