@@ -12,13 +12,14 @@ _DB_ = pymongo.MongoClient(_PATH_).week00_junglerDongsun.junglers
 app = Flask(__name__)
 app.secret_key = _KEY_
 
+# 로그인 동작부
 @app.route('/')
 def loginpage():
-    if 'username' in session:
-        return render_template("index.html", username=session.get('username'), login=True)
+    if 'userID' in session:
+        return render_template("main.html", username=session.get('userid'), login=True)
     else:
-        if 'userid' in session:
-            return render_template("loginpage.html", userid=session.get('userid'), login=False)
+        if '_memorize_' in session:
+            return render_template("loginpage.html", userid=session.get('_memorize_'), login=False)
         else:
             return render_template("loginpage.html", login=False)
 
@@ -30,14 +31,14 @@ def login():
     _mem_ = request.args.get("mem")
 
     if _mem_ == 'on':
-        session['userid'] = _id_
-    else:
-        session.pop('userid')
+        session['_memorize_'] = _id_
+    elif '_memorize_' in session:
+        session.pop('_memorize_')
 
     _cursor_ = _DB_.find_one({"user_id": _id_, "user_pw": _pw_})
 
     if _cursor_:
-        session['username'] = _cursor_.get("user_name")
+        session['userID'] = _id_
         return redirect(url_for("loginpage"))
     else:
         return redirect(url_for("loginpage"))
@@ -45,7 +46,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    session.pop('username')
+    session.pop('userID')
     return redirect(url_for("loginpage"))
 
 

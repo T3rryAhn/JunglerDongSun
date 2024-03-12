@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress ALL -->
 <html lang="ko">
 
 <head>
@@ -16,9 +17,12 @@
 
     <script>
         function checkId(){
+            _flag_ = true;
+
             $.ajax({
                 type: "POST",
                 url: "/checkid",
+                async: false,
                 data: { id: $("#sign-id").val()},
                 success: function(response){debugger;
                     if(response['result'] === 'good'){
@@ -27,9 +31,7 @@
                         $("#result-text").attr('class', 'help is-success');
                         $("#result-text").text("사용 가능 한 아이디입니다.");
 
-                        $("#signup-form").on('submit', function(event){
-                            event.preventDefault = false;   
-                        })
+                        _flag_ = true;
                     }
                     else{
                         debugger;
@@ -38,14 +40,12 @@
                         $("#result-text").attr('class', 'help is-danger');
                         $("#result-text").text("이미 사용 중인 아이디입니다.");
 
-                        $("#signup-form").on('submit', function(event){
-                            event.preventDefault();
-                        })
+                        _flag_ = false;
                     }
-
-
                 }
             })
+
+            return _flag_;
         }
 
         function toggleForm(){
@@ -119,7 +119,7 @@
     </form>
 
     <!-- 회원가입 -->
-    <form id="signup-form" action="/signup" method="POST" style="display: none" onsubmit="checkId()">
+    <form id="signup-form" action="/signup" method="POST" style="display: none" onsubmit="return checkId()">
         <div class="field">
             <label class="label">ID</label>
             <div class="control has-icons-left has-icons-right">
