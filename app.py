@@ -28,9 +28,8 @@ def loginpage():
 def login():
     _id_ = request.form["id"]
     _pw_ = request.form["pw"]
-    _mem_ = request.form["mem"]
 
-    if _mem_ == 'on':
+    if "mem" in request.form:
         session['_memorize_'] = _id_
     elif '_memorize_' in session:
         session.pop('_memorize_')
