@@ -62,23 +62,44 @@
 
         })
 
-        function search(target, text){
-            $.ajax({
-                url: `/search/${target}/${text}`,
-                type: 'GET',
-                success: function (response) {
-
-                    if (response["result"] == "success") {
-                        alert("검색 성공");
-                    } else {
-                        alert("검색 실패");
+        function inquiry(target, text) {
+            if (text.trim() !== '') {
+                $.ajax({
+                    url: `/search/${target}/${text}`,
+                    type: 'GET',
+                    success: function (response) {
+                        fillJunglers(response["junglers"]);
+                    },
+                    error: function (error) {
+                        alert("서버 통신에 실패했습니다.");
                     }
-                },
-                error: function (error) {
-                    alert("서버 통신에 실패했습니다.");
-                }
-            })
+                });
+            }
         }
+
+        // 검색 결과를 화면에 채우는 함수
+        function fillJunglers(junglers) {
+            var container = $(".columns.is-multiline"); // 카드를 채울 컨테이너 선택
+            container.empty(); // 기존 카드 삭제
+
+            // 각각의 정글러 정보를 이용하여 카드 생성 및 추가
+            junglers.forEach(function (jungler) {
+                var cardHtml = `
+            <div class="column is-one-quarter">
+                <div class="card">
+                    <div class="card-content">
+                        <h2>${jungler.user_name}</h2>
+                        <p>${jungler.user_team}</p>
+                        <p>${jungler.user_place}</p>
+                    </div>
+                </div>
+            </div>`;
+                container.append(cardHtml); // 컨테이너에 카드 추가
+            });
+        }
+
+
+
 
     </script>
 </head>
@@ -147,9 +168,33 @@
                     </div>
                     <div class="column">
                         <div class="block">
-                            <button class="button is-medium is-rounded is-success">이름</button>
-                            <button class="button is-medium is-rounded">장소</button>
-                            <button class="button is-medium is-rounded">팀</button>
+                            <button class="button is-medium is-rounded is-success" value="name" onclick='fillJunglers()'>이름</button>
+                            <button class="button is-medium is-rounded" value="place" onclick="">장소</button>
+                            <button class="button is-medium is-rounded" value="team">팀</button>
+                        </div>
+                        <div class="block">
+                            <div name="place" style="display: none;">
+                                <button class="button is-medium is-rounded">기숙사</button>
+                                <button class="button is-medium is-rounded">식당</button>
+                                <button class="button is-medium is-rounded">L407</button>
+                                <button class="button is-medium is-rounded">L401</button>
+                                <button class="button is-medium is-rounded">체력단련실</button>
+                                <button class="button is-medium is-rounded">교외</button>
+                            </div>
+                            <div name="team" style="display: block;">
+                                <button class="button is-medium is-rounded">1팀</button>
+                                <button class="button is-medium is-rounded">2팀</button>
+                                <button class="button is-medium is-rounded">3팀</button>
+                                <button class="button is-medium is-rounded">4팀</button>
+                                <button class="button is-medium is-rounded">5팀</button>
+                                <button class="button is-medium is-rounded">6팀</button>
+                                <button class="button is-medium is-rounded">7팀</button>
+                                <button class="button is-medium is-rounded">8팀</button>
+                                <button class="button is-medium is-rounded">9팀</button>
+                                <button class="button is-medium is-rounded">10팀</button>
+                                <button class="button is-medium is-rounded">11팀</button>
+                                <button class="button is-medium is-rounded">12팀</button>
+                            </div>
                         </div>
                         <!-- <div id="place_category" class="block">
                             <button class="button is-medium is-rounded is-success">기숙사</button>
@@ -177,18 +222,18 @@
                         <div class="field has-addons">
                             <p class="control">
                                 <span class="select">
-                                    <select>
-                                        <option>이름</option>
-                                        <option>장소</option>
-                                        <option>팀</option>
+                                    <select id="search-target">
+                                        <option value="name">이름</option>
+                                        <option value="place">장소</option>
+                                        <option value="team">팀</option>
                                     </select>
                                 </span>
                             </p>
                             <p class="control is-expanded">
-                                <input class="input" type="text" placeholder="검색어를 입력하세요.">
+                                <input id="search-text" class="input" type="text" placeholder="검색어를 입력하세요.">
                             </p>
                             <p class="control">
-                                <a class="button is-light">
+                                <a class="button is-light" onclick='inquiry($(`#search-target`).val(), $(`#search-text`).val())'>
                                     검색
                                 </a>
                             </p>
