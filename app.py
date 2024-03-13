@@ -138,19 +138,19 @@ def updatePlace():
 
 @app.route("/search/name/<name>", methods=["GET"])
 def searchByName(name):
-    result = list(_DB_.find({"user_name": name}, {'_id': 0}))
+    result = list(_DB_.find({"user_name": { '$regex': name }}, {'_id': 0}))
     return jsonify({'result': 'success', 'junglers': result})
 
 
 @app.route("/search/team/<team>", methods=["GET"])
 def searchByTeam(team):
-    result = list(_DB_.find({"user_team": team}, {'_id': 0}))
+    result = list(_DB_.find({"user_team": {'$regex': team}}, {'_id': 0}))
     return jsonify({'result': 'success', 'junglers': result})
 
 
 @app.route("/search/place/<place>", methods=["GET"])
 def searchByPlace(place):
-    result = list(_DB_.find({"user_place": place}, {'_id': 0}))
+    result = list(_DB_.find({"user_place": {'$regex': place}}, {'_id': 0}))
     print(result)
     return jsonify({'result': 'success', 'junglers': result})
 
