@@ -17,6 +17,12 @@
             integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
 
     <script>
+        $(document).ready(function () {
+            if({{ login_failure }}){
+                alert('잘못된 계정입니다!')
+            }
+        });
+
         function checkId(){
             _flag_ = true;
 
