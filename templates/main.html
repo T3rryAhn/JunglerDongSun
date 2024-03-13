@@ -62,6 +62,7 @@
 
         })
 
+<<<<<<< HEAD
         function inquiry(target, text) {
             if (text.trim() !== '') {
                 $.ajax({
@@ -72,6 +73,18 @@
                     },
                     error: function (error) {
                         alert("서버 통신에 실패했습니다.");
+=======
+        function search(target, text) {
+            $.ajax({
+                url: `/search/${target}/${text}`,
+                type: 'GET',
+                success: function (response) {
+
+                    if (response["result"] == "success") {
+                        alert("검색 성공");
+                    } else {
+                        alert("검색 실패");
+>>>>>>> ac9ba5dcbaa3e95a5251331b24b48c82b26f9935
                     }
                 });
             }
@@ -138,15 +151,15 @@
                         <div class="box">
                             <input type="hidden" id="id_num" value="2">
                             <div class="field has-addons">
-                                <h2 class="is-size-4">안태리</h2>
-                                <button>로그아웃</button>
+                                <h2 class="is-size-4">{{ userInfo[1] }}</h2>
+                                <a href="{{ url_for('logout') }}" class="button">로그아웃</a>
                             </div>
                             <div class="field has-addons">
                                 <p class="control">팀</p>
                                 <p class="control">
                                     <span class="select is-dark is-small">
-                                        <select id="user_team_selector" aria-label="1팀" required>
-                                            <option selected>1팀</option>
+                                        <select id="user_team_selector" aria-label="{{ userInfo[2] }}" required>
+                                            <option>1팀</option>
                                             <option>2팀</option>
                                             <option>3팀</option>
                                             <option>4팀</option>
@@ -166,10 +179,10 @@
                                 <p class="control">장소</p>
                                 <p class="control">
                                     <span class="select is-dark is-small">
-                                        <select id="user_place_selector" aria-label="407 강의동" required>
+                                        <select id="user_place_selector" value="{{ userInfo[3] }}" required>
                                             <option>기숙사</option>
                                             <option>식당</option>
-                                            <option selected>407 강의동</option>
+                                            <option>407 강의동</option>
                                             <option>401 강의동</option>
                                             <option>체력단련실</option>
                                             <option>교외</option>
