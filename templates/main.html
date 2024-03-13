@@ -159,7 +159,7 @@
                             <input type="hidden" id="user_id" value={{myInfo.user_id}}>
                             <div class="field has-addons">
                                 <h2 class="is-size-4">{{myInfo.user_name}}</h2>
-                                <a href="{{ url_for("logout") }}" class="button">로그아웃</a>
+                                <a href="{{ url_for('logout') }}" class="button">로그아웃</a>
                             </div>
                             <div class="field has-addons">
                                 <p class="control">팀</p>
@@ -223,7 +223,7 @@
 
                         <div class="block">
                             <button name="category-button" class="button is-medium is-rounded is-success" value="name"
-                                onclick="toggleHighlight(this.name, this.id), toggleCategory('category-name-detail-buttons'), inquiry(`list`, `all`)"
+                                onclick="toggleHighlight(this.name, this.id), toggleHighlight('category-detail', this.id), toggleCategory('category-name-detail-buttons'), inquiry(`list`, `all`)"
                                 id="category1">전체</button>
                             <button name="category-button" class="button is-medium is-rounded" value="place"
                                 onclick="toggleHighlight(this.name, this.id), toggleCategory('category-place-detail-buttons')"
