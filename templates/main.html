@@ -157,45 +157,50 @@
                     <div class="column is-one-quarter">
                         <div class="box">
                             <input type="hidden" id="user_id" value={{myInfo.user_id}}>
-                            <div class="field has-addons">
+                            <div style="float: left; width: 100px; margin-right: 15px">
+                                <img src="https://cdn.pixabay.com/photo/2013/07/13/10/44/man-157699_640.png">
                                 <h2 class="is-size-4">{{myInfo.user_name}}</h2>
-                                <a href="/logout" class="button">로그아웃</a>
                             </div>
-                            <div class="field has-addons">
-                                <p class="control">팀</p>
-                                <p class="control">
-                                    <span class="select is-dark is-small">
-                                        <select id="user_team_selector" required>
-                                            {% for cate in category %}
-                                            {% for key, value in cate.items() %}
-                                            {% if key == "team" and value == myInfo.user_team %}
-                                            <option selected>{{value}}</option>
-                                            {% elif key == "team" %}
-                                            <option>{{value}}</option>
-                                            {% endif %}
-                                            {% endfor %}
-                                            {% endfor %}
-                                        </select>
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="field has-addons">
-                                <p class="control">장소</p>
-                                <p class="control">
-                                    <span class="select is-dark is-small">
-                                        <select id="user_place_selector" required>
-                                            {% for cate in category %}
-                                            {% for key, value in cate.items() %}
-                                            {% if key == "place" and value == myInfo.user_place %}
-                                            <option selected>{{value}}</option>
-                                            {% elif key == "place" %}
-                                            <option>{{value}}</option>
-                                            {% endif %}
-                                            {% endfor %}
-                                            {% endfor %}
-                                        </select>
-                                    </span>
-                                </p>
+                            <div style="display: inline-block">
+                                <div class="field has-addons">
+                                    <a href="/logout" class="button">로그아웃</a>
+                                </div>
+                                <div class="field has-addons">
+                                    <p class="control">팀</p>
+                                    <p class="control">
+                                        <span class="select is-dark is-small">
+                                            <select id="user_team_selector" required>
+                                                {% for cate in category %}
+                                                {% for key, value in cate.items() %}
+                                                {% if key == "team" and value == myInfo.user_team %}
+                                                <option selected>{{value}}</option>
+                                                {% elif key == "team" %}
+                                                <option>{{value}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% endfor %}
+                                            </select>
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="field has-addons">
+                                    <p class="control">장소</p>
+                                    <p class="control">
+                                        <span class="select is-dark is-small">
+                                            <select id="user_place_selector" required>
+                                                {% for cate in category %}
+                                                {% for key, value in cate.items() %}
+                                                {% if key == "place" and value == myInfo.user_place %}
+                                                <option selected>{{value}}</option>
+                                                {% elif key == "place" %}
+                                                <option>{{value}}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% endfor %}
+                                            </select>
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
