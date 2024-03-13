@@ -3,3 +3,4 @@
 /.venv
 /.idea
 .env
+checkEnv.py

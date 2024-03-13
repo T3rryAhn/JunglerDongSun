@@ -25,6 +25,10 @@
     <style type="text/css">
     </style>
     <script>
+        let curr_target = "list";
+        let curr_text = "all";
+        var interval;
+
         $(document).ready(function () {
             showJunglers();
 
@@ -34,12 +38,7 @@
                 $.ajax({
                     type: "POST",
                     url: "/update/team",
-                    data: { "user_id": user_id, "user_team": user_team },
-                    success: function (response) {
-                        if (response["result"] == "success") {
-                            alert("팀저장됨");
-                        }
-                    }
+                    data: { "user_id": user_id, "user_team": user_team }
                 })
             });
 
@@ -49,24 +48,29 @@
                 $.ajax({
                     type: "POST",
                     url: "/update/place",
-                    data: { "user_id": user_id, "user_place": user_place },
-                    success: function (response) {
-                        if (response["result"] == "success") {
-                            alert("장소저장됨");
-                        }
-                    }
+                    data: { "user_id": user_id, "user_place": user_place }
                 })
             });
 
-            // setInterval(showJunglers, 2000);
+            interval = setInterval((function () {
+                inquiry(curr_target, curr_text);
+            }), 2000);
+
+            $("#search-text").keydown(function (key) {
+                if (key.keyCode == 13) {
+                    inquiry($(`#search-target`).val(), $(`#search-text`).val());
+                }
+            })
+
         })
 
-        function showJunglers(response) {
-            $("#jungler-column").html("");
+
+        function showJunglers() {
             $.ajax({
                 type: "GET",
-                url: "/list",
+                url: "/search/list/all",
                 success: function (response) {
+                    $("#jungler-column").html("");
                     showJunglerColum(response);
                 }
             })
@@ -74,6 +78,7 @@
 
         function showJunglerColum(response) {
             if (response["result"] == "success") {
+                $("#jungler-column").html("");
                 let junglers = response["junglers"];
                 for (let i = 0; i < junglers.length; i++) {
                     makeColum(junglers[i]["user_name"], junglers[i]["user_team"], junglers[i]["user_place"])
@@ -100,34 +105,15 @@
                     url: `/search/${target}/${text}`,
                     type: 'GET',
                     success: function (response) {
-                        fillJunglers(response["junglers"]);
+                        showJunglerColum(response);
                     },
                     error: function (error) {
                         alert("서버 통신에 실패했습니다.");
+                        clearInterval(interval);
                     }
                 });
+                updateTarget(target, text);
             }
-        }
-
-        // 검색 결과를 화면에 채우는 함수
-        function fillJunglers(junglers) {
-            var container = $(".columns.is-multiline"); // 카드를 채울 컨테이너 선택
-            container.empty(); // 기존 카드 삭제
-
-            // 각각의 정글러 정보를 이용하여 카드 생성 및 추가
-            junglers.forEach(function (jungler) {
-                var cardHtml = `
-            <div class="column is-one-quarter">
-                <div class="card">
-                    <div class="card-content">
-                        <h2>${jungler.user_name}</h2>
-                        <p>${jungler.user_team}</p>
-                        <p>${jungler.user_place}</p>
-                    </div>
-                </div>
-            </div>`;
-                container.append(cardHtml); // 컨테이너에 카드 추가
-            });
         }
 
         // 요소 숨기고 보이는 토글 기능
@@ -147,6 +133,11 @@
             $(`#${id}`).addClass('is-success'); // 선택된 팀 버튼 강조
         }
 
+        function updateTarget(target, text) {
+            curr_target = target;
+            curr_text = text;
+        }
+
     </script>
 </head>
 
@@ -157,9 +148,6 @@
                 <p class="title">
                     정글러 동선
                 </p>
-                <!-- <p class="subtitle">
-                    Primary subtitle
-                </p> -->
             </div>
         </section>
 
@@ -235,8 +223,8 @@
 
                         <div class="block">
                             <button name="category-button" class="button is-medium is-rounded is-success" value="name"
-                                onclick="toggleHighlight(this.name, this.id), toggleCategory('category-name-detail-buttons'), fillJunglers()"
-                                id="category1">이름</button>
+                                onclick="toggleHighlight(this.name, this.id), toggleCategory('category-name-detail-buttons'), inquiry(`list`, `all`)"
+                                id="category1">전체</button>
                             <button name="category-button" class="button is-medium is-rounded" value="place"
                                 onclick="toggleHighlight(this.name, this.id), toggleCategory('category-place-detail-buttons')"
                                 id="category2">장소</button>
@@ -252,45 +240,27 @@
                             </div>
                             <div name="category-detail-buttons" id="category-place-detail-buttons"
                                 style="display: none;">
-                                <button name="category-detail" class="button is-normal is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="place1">기숙사</button>
-                                <button name="category-detail" class="button is-normal is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="place2">식당</button>
-                                <button name="category-detail" class="button is-normal is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="place3">L407</button>
-                                <button name="category-detail" class="button is-normal is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="place4">L401</button>
-                                <button name="category-detail" class="button is-normal is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="place5">체력단련실</button>
-                                <button name="category-detail" class="button is-normal is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="place6">교외</button>
+                                {% for cate in category %}
+                                {% for key, value in cate.items() %}
+                                {% if key == "place" %}
+                                <button name="category-detail" class="button is-small is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id), inquiry(`place`, `{{value}}`)"
+                                    id="place-{{value}}">{{value}}</button>
+                                {% endif %}
+                                {% endfor %}
+                                {% endfor %}
                             </div>
                             <div name="category-detail-buttons" id="category-team-detail-buttons"
                                 style="display: none;">
+                                {% for cate in category %}
+                                {% for key, value in cate.items() %}
+                                {% if key == "team" %}
                                 <button name="category-detail" class="button is-small is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="team1">1팀</button>
-                                <button name="category-detail" class="button is-small is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="team2">2팀</button>
-                                <button name="category-detail" class="button is-small is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="team3">3팀</button>
-                                <button name="category-detail" class="button is-small is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="team4">4팀</button>
-                                <button name="category-detail" class="button is-small is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="team5">5팀</button>
-                                <button name="category-detail" class="button is-small is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="team6">6팀</button>
-                                <button name="category-detail" class="button is-small is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="team7">7팀</button>
-                                <button name="category-detail" class="button is-small is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="team8">8팀</button>
-                                <button name="category-detail" class="button is-small is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="team9">9팀</button>
-                                <button name="category-detail" class="button is-small is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="team10">10팀</button>
-                                <button name="category-detail" class="button is-small is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="team11">11팀</button>
-                                <button name="category-detail" class="button is-small is-rounded"
-                                    onclick="toggleHighlight(this.name, this.id)" id="team12">12팀</button>
+                                    onclick="toggleHighlight(this.name, this.id), inquiry(`team`, `{{value}}`)"
+                                    id="team-{{value}}">{{value}}</button>
+                                {% endif %}
+                                {% endfor %}
+                                {% endfor %}
                             </div>
                         </div>
 
