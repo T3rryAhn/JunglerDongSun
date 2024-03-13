@@ -62,22 +62,57 @@
 
         })
 
-        function search(target, text){
-            $.ajax({
-                url: `/search/${target}/${text}`,
-                type: 'GET',
-                success: function (response) {
-
-                    if (response["result"] == "success") {
-                        alert("검색 성공");
-                    } else {
-                        alert("검색 실패");
+        function inquiry(target, text) {
+            if (text.trim() !== '') {
+                $.ajax({
+                    url: `/search/${target}/${text}`,
+                    type: 'GET',
+                    success: function (response) {
+                        fillJunglers(response["junglers"]);
+                    },
+                    error: function (error) {
+                        alert("서버 통신에 실패했습니다.");
                     }
-                },
-                error: function (error) {
-                    alert("서버 통신에 실패했습니다.");
-                }
-            })
+                });
+            }
+        }
+
+        // 검색 결과를 화면에 채우는 함수
+        function fillJunglers(junglers) {
+            var container = $(".columns.is-multiline"); // 카드를 채울 컨테이너 선택
+            container.empty(); // 기존 카드 삭제
+
+            // 각각의 정글러 정보를 이용하여 카드 생성 및 추가
+            junglers.forEach(function (jungler) {
+                var cardHtml = `
+            <div class="column is-one-quarter">
+                <div class="card">
+                    <div class="card-content">
+                        <h2>${jungler.user_name}</h2>
+                        <p>${jungler.user_team}</p>
+                        <p>${jungler.user_place}</p>
+                    </div>
+                </div>
+            </div>`;
+                container.append(cardHtml); // 컨테이너에 카드 추가
+            });
+        }
+
+        // 요소 숨기고 보이는 토글 기능
+        function toggleDisplay(id){
+            $(`#${id}`).toggle();
+        }
+
+        // 카테고리 토글
+        function toggleCategory(id){
+          $(`div[name=category-detail-buttons]`).hide();
+          toggleDisplay(id);
+        }
+
+        // 하이라이트 토글
+        function toggleHighlight(name, id){
+          $(`button[name=${name}]`).removeClass('is-success'); // 모든 버튼 비활성화
+            $(`#${id}`).addClass('is-success'); // 선택된 팀 버튼 강조
         }
 
     </script>
@@ -147,48 +182,54 @@
                     </div>
                     <div class="column">
                         <div class="block">
-                            <button class="button is-medium is-rounded is-success">이름</button>
-                            <button class="button is-medium is-rounded">장소</button>
-                            <button class="button is-medium is-rounded">팀</button>
+                            <button name="category-button" class="button is-medium is-rounded is-success" value="name" onclick="toggleHighlight(this.name, this.id), toggleCategory('category-name-detail-buttons'), fillJunglers()" id="category1">이름</button>
+                            <button name="category-button" class="button is-medium is-rounded" value="place" onclick="toggleHighlight(this.name, this.id), toggleCategory('category-place-detail-buttons')" id="category2">장소</button>
+                            <button name="category-button" class="button is-medium is-rounded" value="team" onclick="toggleHighlight(this.name, this.id), toggleCategory('category-team-detail-buttons')" id="category3">팀</button>
                         </div>
-                        <!-- <div id="place_category" class="block">
-                            <button class="button is-medium is-rounded is-success">기숙사</button>
-                            <button class="button is-medium is-rounded">식당</button>
-                            <button class="button is-medium is-rounded">407 강의동</button>
-                            <button class="button is-medium is-rounded">401 강의동</button>
-                            <button class="button is-medium is-rounded">체력단련실</button>
-                            <button class="button is-medium is-rounded">교외</button>
-                            <button class="button is-medium is-rounded">비공개</button>
+
+                        <div class="block">
+                            <div name="category-detail-buttons" id="category-name-detail-buttons" style="display: block;">
+
+                            </div>
+                            <div name="category-detail-buttons" id="category-place-detail-buttons" style="display: none;">
+                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place1">기숙사</button>
+                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place2">식당</button>
+                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place3">L407</button>
+                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place4">L401</button>
+                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place5">체력단련실</button>
+                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place6">교외</button>
+                            </div>
+                            <div name="category-detail-buttons" id="category-team-detail-buttons" style="display: none;">
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team1">1팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team2">2팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team3">3팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team4">4팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team5">5팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team6">6팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team7">7팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team8">8팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team9">9팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team10">10팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team11">11팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team12">12팀</button>
+                            </div>
                         </div>
-                        <div id="team_category" class="block">
-                            <button class="button is-medium is-rounded is-success">1팀</button>
-                            <button class="button is-medium is-rounded">2팀</button>
-                            <button class="button is-medium is-rounded">3팀</button>
-                            <button class="button is-medium is-rounded">4팀</button>
-                            <button class="button is-medium is-rounded">5팀</button>
-                            <button class="button is-medium is-rounded">6팀</button>
-                            <button class="button is-medium is-rounded">7팀</button>
-                            <button class="button is-medium is-rounded">8팀</button>
-                            <button class="button is-medium is-rounded">9팀</button>
-                            <button class="button is-medium is-rounded">10팀</button>
-                            <button class="button is-medium is-rounded">11팀</button>
-                            <button class="button is-medium is-rounded">12팀</button>
-                        </div> -->
+                        
                         <div class="field has-addons">
                             <p class="control">
                                 <span class="select">
-                                    <select>
-                                        <option>이름</option>
-                                        <option>장소</option>
-                                        <option>팀</option>
+                                    <select id="search-target">
+                                        <option value="name">이름</option>
+                                        <option value="place">장소</option>
+                                        <option value="team">팀</option>
                                     </select>
                                 </span>
                             </p>
                             <p class="control is-expanded">
-                                <input class="input" type="text" placeholder="검색어를 입력하세요.">
+                                <input id="search-text" class="input" type="text" placeholder="검색어를 입력하세요.">
                             </p>
                             <p class="control">
-                                <a class="button is-light">
+                                <a class="button is-light" onclick='inquiry($(`#search-target`).val(), $(`#search-text`).val())'>
                                     검색
                                 </a>
                             </p>
