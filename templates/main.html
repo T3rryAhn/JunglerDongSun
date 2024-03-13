@@ -181,6 +181,26 @@
                         </div>
                     </div>
                     <div class="column">
+                        <div class="field has-addons">
+                            <p class="control">
+                                <span class="select">
+                                    <select id="search-target">
+                                        <option value="name">이름</option>
+                                        <option value="place">장소</option>
+                                        <option value="team">팀</option>
+                                    </select>
+                                </span>
+                            </p>
+                            <p class="control is-expanded">
+                                <input id="search-text" class="input" type="text" placeholder="검색어를 입력하세요.">
+                            </p>
+                            <p class="control">
+                                <a class="button is-light" onclick='inquiry($(`#search-target`).val(), $(`#search-text`).val())'>
+                                    검색
+                                </a>
+                            </p>
+                        </div>
+
                         <div class="block">
                             <button name="category-button" class="button is-medium is-rounded is-success" value="name" onclick="toggleHighlight(this.name, this.id), toggleCategory('category-name-detail-buttons'), fillJunglers()" id="category1">이름</button>
                             <button name="category-button" class="button is-medium is-rounded" value="place" onclick="toggleHighlight(this.name, this.id), toggleCategory('category-place-detail-buttons')" id="category2">장소</button>
@@ -215,25 +235,7 @@
                             </div>
                         </div>
                         
-                        <div class="field has-addons">
-                            <p class="control">
-                                <span class="select">
-                                    <select id="search-target">
-                                        <option value="name">이름</option>
-                                        <option value="place">장소</option>
-                                        <option value="team">팀</option>
-                                    </select>
-                                </span>
-                            </p>
-                            <p class="control is-expanded">
-                                <input id="search-text" class="input" type="text" placeholder="검색어를 입력하세요.">
-                            </p>
-                            <p class="control">
-                                <a class="button is-light" onclick='inquiry($(`#search-target`).val(), $(`#search-text`).val())'>
-                                    검색
-                                </a>
-                            </p>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
