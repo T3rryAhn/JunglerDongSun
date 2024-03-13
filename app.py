@@ -5,6 +5,8 @@ import hashlib
 from flask import Flask, render_template, jsonify, request, session, url_for, redirect
 from dotenv import load_dotenv
 
+from datetime import datetime
+
 load_dotenv(verbose=True)
 
 # DB 설정
@@ -18,7 +20,7 @@ app = Flask(__name__)
 app.secret_key = _KEY_
 
 
-# 로그인 동작부
+# 로그인 동작부.
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -139,7 +141,7 @@ def main():
 def update_team():
     user_id = request.form["user_id"]
     user_team = request.form["user_team"]
-    _DB_.update_one({"user_id": user_id}, {"$set": {"user_team": user_team}})
+    _DB_.update_one({"user_id": user_id}, {"$set": {"user_team": user_team}, "$currentDate": {"update_time": True}})
     return jsonify({"result": "success"})
 
 
@@ -147,7 +149,7 @@ def update_team():
 def update_place():
     user_id = request.form["user_id"]
     user_place = request.form["user_place"]
-    _DB_.update_one({"user_id": user_id}, {"$set": {"user_place": user_place}})
+    _DB_.update_one({"user_id": user_id}, {"$set": {"user_place": user_place}, "$currentDate": {"update_time": True}})
     return jsonify({"result": "success"})
 
 
