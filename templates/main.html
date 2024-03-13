@@ -98,8 +98,22 @@
             });
         }
 
+        // 요소 숨기고 보이는 토글 기능
+        function toggleDisplay(id){
+            $(`#${id}`).toggle();
+        }
 
+        // 카테고리 토글
+        function toggleCategory(id){
+          $(`div[name=category-detail-buttons]`).hide();
+          toggleDisplay(id);
+        }
 
+        // 하이라이트 토글
+        function toggleHighlight(name, id){
+          $(`button[name=${name}]`).removeClass('is-success'); // 모든 버튼 비활성화
+            $(`#${id}`).addClass('is-success'); // 선택된 팀 버튼 강조
+        }
 
     </script>
 </head>
@@ -168,57 +182,39 @@
                     </div>
                     <div class="column">
                         <div class="block">
-                            <button class="button is-medium is-rounded is-success" value="name" onclick='fillJunglers()'>이름</button>
-                            <button class="button is-medium is-rounded" value="place" onclick="">장소</button>
-                            <button class="button is-medium is-rounded" value="team">팀</button>
+                            <button name="category-button" class="button is-medium is-rounded is-success" value="name" onclick="toggleHighlight(this.name, this.id), toggleCategory('category-name-detail-buttons'), fillJunglers()" id="category1">이름</button>
+                            <button name="category-button" class="button is-medium is-rounded" value="place" onclick="toggleHighlight(this.name, this.id), toggleCategory('category-place-detail-buttons')" id="category2">장소</button>
+                            <button name="category-button" class="button is-medium is-rounded" value="team" onclick="toggleHighlight(this.name, this.id), toggleCategory('category-team-detail-buttons')" id="category3">팀</button>
                         </div>
+
                         <div class="block">
-                            <div name="place" style="display: none;">
-                                <button class="button is-medium is-rounded">기숙사</button>
-                                <button class="button is-medium is-rounded">식당</button>
-                                <button class="button is-medium is-rounded">L407</button>
-                                <button class="button is-medium is-rounded">L401</button>
-                                <button class="button is-medium is-rounded">체력단련실</button>
-                                <button class="button is-medium is-rounded">교외</button>
+                            <div name="category-detail-buttons" id="category-name-detail-buttons" style="display: block;">
+
                             </div>
-                            <div name="team" style="display: block;">
-                                <button class="button is-medium is-rounded">1팀</button>
-                                <button class="button is-medium is-rounded">2팀</button>
-                                <button class="button is-medium is-rounded">3팀</button>
-                                <button class="button is-medium is-rounded">4팀</button>
-                                <button class="button is-medium is-rounded">5팀</button>
-                                <button class="button is-medium is-rounded">6팀</button>
-                                <button class="button is-medium is-rounded">7팀</button>
-                                <button class="button is-medium is-rounded">8팀</button>
-                                <button class="button is-medium is-rounded">9팀</button>
-                                <button class="button is-medium is-rounded">10팀</button>
-                                <button class="button is-medium is-rounded">11팀</button>
-                                <button class="button is-medium is-rounded">12팀</button>
+                            <div name="category-detail-buttons" id="category-place-detail-buttons" style="display: none;">
+                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place1">기숙사</button>
+                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place2">식당</button>
+                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place3">L407</button>
+                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place4">L401</button>
+                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place5">체력단련실</button>
+                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place6">교외</button>
+                            </div>
+                            <div name="category-detail-buttons" id="category-team-detail-buttons" style="display: none;">
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team1">1팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team2">2팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team3">3팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team4">4팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team5">5팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team6">6팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team7">7팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team8">8팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team9">9팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team10">10팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team11">11팀</button>
+                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team12">12팀</button>
                             </div>
                         </div>
-                        <!-- <div id="place_category" class="block">
-                            <button class="button is-medium is-rounded is-success">기숙사</button>
-                            <button class="button is-medium is-rounded">식당</button>
-                            <button class="button is-medium is-rounded">407 강의동</button>
-                            <button class="button is-medium is-rounded">401 강의동</button>
-                            <button class="button is-medium is-rounded">체력단련실</button>
-                            <button class="button is-medium is-rounded">교외</button>
-                            <button class="button is-medium is-rounded">비공개</button>
-                        </div>
-                        <div id="team_category" class="block">
-                            <button class="button is-medium is-rounded is-success">1팀</button>
-                            <button class="button is-medium is-rounded">2팀</button>
-                            <button class="button is-medium is-rounded">3팀</button>
-                            <button class="button is-medium is-rounded">4팀</button>
-                            <button class="button is-medium is-rounded">5팀</button>
-                            <button class="button is-medium is-rounded">6팀</button>
-                            <button class="button is-medium is-rounded">7팀</button>
-                            <button class="button is-medium is-rounded">8팀</button>
-                            <button class="button is-medium is-rounded">9팀</button>
-                            <button class="button is-medium is-rounded">10팀</button>
-                            <button class="button is-medium is-rounded">11팀</button>
-                            <button class="button is-medium is-rounded">12팀</button>
-                        </div> -->
+                        
                         <div class="field has-addons">
                             <p class="control">
                                 <span class="select">
