@@ -151,6 +151,7 @@ def searchByTeam(team):
 @app.route("/search/place/<place>", methods=["GET"])
 def searchByPlace(place):
     result = list(_DB_.find({"user_place": place}, {'_id': 0}))
+    print(result)
     return jsonify({'result': 'success', 'junglers': result})
 
 
