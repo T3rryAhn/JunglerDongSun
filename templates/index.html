@@ -1,24 +1,44 @@
 <!DOCTYPE html>
-<html lang="ko">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>로그인 페이지</title>
-
-    <!-- Bulma CSS Library -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <script src="https://kit.fontawesome.com/59db0249c2.js" crossorigin="anonymous"></script>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.js"
-            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <title>Public Key Encryption Example</title>
 </head>
-
 <body>
-    <div class="container">
-        <h2 style="text-align: center">{{username}}의 정글러 동선</h2>
-        <a href = "/logout">로그아웃</a>
-    </div>
+<h2>Public Key Encryption Example</h2>
+<textarea id="plaintext" rows="4" cols="50">Enter your message here...</textarea><br>
+<button onclick="encryptData()">Encrypt</button><br>
+<textarea id="encryptedData" rows="4" cols="50" readonly></textarea><br>
+
+<script>
+    async function encryptData() {
+        const plaintext = document.getElementById('plaintext').value;
+
+        // 퍼블릭 키를 가져옵니다.
+        const publicKey = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvu8SuG9UdFqsPi5x37RB
+mTlYjjNoSFC30zXry1EL1g5L7+uJ8SZLgobtuWvvm8g3+EJOVRQYJI7DNkhhOTdE
+o9AgTDZwbOfza24oWG1q6hz9wtiGmCBjYedRucyHX3AKlebrriUvhzRB4HInNre4
+tCpvJrXH+1mrorPF6Vch2vChItYSr2/x0t9tvIa1SDBrrhJ5FXmW2C4FN7fHBx9J
+9+VXJpz5Dm/saVkZcMiVQy0QYKiEZoW8hoNQ3GgqLcMKfPeq/qRK08aDIqqhIS1a
+BVKy8YY+5fYFOVWBw+PHswNw6uJQI3pVewG8xNHMZniqONviUU+Uvj1WyfgdQHzp
+5wIDAQAB
+-----END PUBLIC KEY-----`;
+
+        // 퍼블릭 키를 사용하여 데이터를 암호화합니다.
+        const encryptedData = await window.crypto.subtle.encrypt(
+            {
+                name: 'RSA-OAEP',
+            },
+            publicKey,
+            new TextEncoder().encode(plaintext)
+        );
+
+        // 암호화된 데이터를 Base64로 인코딩하여 표시합니다.
+        const encryptedDataBase64 = btoa(String.fromCharCode(...new Uint8Array(encryptedData)));
+        document.getElementById('encryptedData').value = encryptedDataBase64;
+    }
+</script>
 </body>
 </html>

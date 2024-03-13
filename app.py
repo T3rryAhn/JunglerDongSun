@@ -3,6 +3,7 @@ import os, pymongo, hashlib
 from flask import Flask, render_template, jsonify, request, session, url_for, redirect
 from dotenv import load_dotenv
 
+# .env 파일 로드
 load_dotenv(verbose=True)
 
 # DB 설정
@@ -15,17 +16,8 @@ _KEY_ = os.getenv('KEY')
 app = Flask(__name__)
 app.secret_key = _KEY_
 
-# 로그인 동작부
-@app.route('/')
-def loginpage():
-    if 'userID' in session:
-        return redirect(url_for("main"))
-    else:
-        if '_memorize_' in session:
-            return render_template("loginpage.html", userID=session.get('_memorize_'), login=False)
-        else:
-            return render_template("loginpage.html", login=False)
 
+# 로그인 동작부
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -37,13 +29,12 @@ def login():
     elif '_memorize_' in session:
         session.pop('_memorize_')
 
+    # 비밀번호 해시
     _HASH_ = hashlib.sha256()
     _HASH_.update(str(_pw_).encode('utf-8'))
-    _pw_ = _HASH_.hexdigest()
+    _PASS_ = _HASH_.hexdigest()
 
-    print(_pw_)
-
-    _cursor_ = _DB_.find_one({"user_id": _id_, "user_pw": _pw_})
+    _cursor_ = _DB_.find_one({"user_id": _id_, "user_pw": _PASS_})
 
     if _cursor_:
         session['userID'] = _id_
@@ -81,10 +72,25 @@ def signup():
     if _cursor_:
         return jsonify({'message': '이미 사용 중인 아이디 입니다.'})
     else:
-        _DB_.insert_one({"user_id": _id_, "user_pw": _pw_, "user_name": _name_, "user_team": "1팀", "user_place": "비공개"})
+        # 비밀번호 해시
+        _HASH_ = hashlib.sha256()
+        _HASH_.update(str(_pw_).encode('utf-8'))
+        _PASS_ = _HASH_.hexdigest()
+
+        _DB_.insert_one({"user_id": _id_, "user_pw": _PASS_, "user_name": _name_, "user_team": "1팀", "user_place": "비공개"})
         session['username'] = _name_
         return redirect(url_for("loginpage"))
 
+
+@app.route('/')
+def loginpage():
+    if 'userID' in session:
+        return redirect(url_for("main"))
+    else:
+        if '_memorize_' in session:
+            return render_template("loginpage.html", userID=session.get('_memorize_'), login=False)
+        else:
+            return render_template("loginpage.html", login=False)
 
 # main 상단
 
