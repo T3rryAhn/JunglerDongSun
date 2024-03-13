@@ -1,15 +1,17 @@
 import os
 import pymongo
+import certifi
 
 from flask import Flask, render_template, jsonify, request, session, url_for, redirect
 from dotenv import load_dotenv
 
+ca = certifi.where()
 
 load_dotenv(verbose=True)
 _PATH_ = os.getenv('MONGO_DB_PATH')
 _KEY_ = os.getenv('KEY')
-_DB_ = pymongo.MongoClient(_PATH_).week00_junglerDongsun.junglers
-_DB_CATEGORY = pymongo.MongoClient(_PATH_).week00_junglerDongsun.category
+_DB_ = pymongo.MongoClient(_PATH_, tlsCAFile=ca).week00_junglerDongsun.junglers
+_DB_CATEGORY = pymongo.MongoClient(_PATH_, tlsCAFile=ca).week00_junglerDongsun.category
 
 app = Flask(__name__)
 app.secret_key = _KEY_
@@ -114,11 +116,6 @@ def main():
     category = list(_DB_CATEGORY.find({}, {'_id':0}).sort({'index': 1}))
     return render_template('main.html', myInfo = myInfo, category = category, login=True)
 
-@app.route("/list", methods=["GET"])
-def listing():
-    junglers = list(_DB_.find({}, {'_id':0}))
-    return jsonify({'result':'success', 'junglers': junglers})
-
 @app.route("/update/team", methods=["POST"])
 def updateTeam():
     user_id = request.form["user_id"]
@@ -134,7 +131,12 @@ def updatePlace():
     return jsonify({"result":"success"})
 
 
-# toDo 조회 검색어
+# 조회 검색어
+
+@app.route("/search/list/all", methods=["GET"])
+def listing():
+    junglers = list(_DB_.find({}, {'_id':0}))
+    return jsonify({'result':'success', 'junglers': junglers})
 
 @app.route("/search/name/<name>", methods=["GET"])
 def searchByName(name):
@@ -151,9 +153,8 @@ def searchByTeam(team):
 @app.route("/search/place/<place>", methods=["GET"])
 def searchByPlace(place):
     result = list(_DB_.find({"user_place": {'$regex': place}}, {'_id': 0}))
-    print(result)
     return jsonify({'result': 'success', 'junglers': result})
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5002, debug=True)

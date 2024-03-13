@@ -25,6 +25,10 @@
     <style type="text/css">
     </style>
     <script>
+        let curr_target = "list";
+        let curr_text = "all";
+        var interval;
+
         $(document).ready(function () {
             showJunglers();
 
@@ -34,12 +38,7 @@
                 $.ajax({
                     type: "POST",
                     url: "/update/team",
-                    data: { "user_id": user_id, "user_team": user_team },
-                    success: function (response) {
-                        if (response["result"] == "success") {
-                            alert("팀저장됨");
-                        }
-                    }
+                    data: { "user_id": user_id, "user_team": user_team }
                 })
             });
 
@@ -49,30 +48,27 @@
                 $.ajax({
                     type: "POST",
                     url: "/update/place",
-                    data: { "user_id": user_id, "user_place": user_place },
-                    success: function (response) {
-                        if (response["result"] == "success") {
-                            alert("장소저장됨");
-                        }
-                    }
+                    data: { "user_id": user_id, "user_place": user_place }
                 })
             });
 
-            // setInterval(showJunglers, 2000);
+            interval = setInterval((function () {
+                inquiry(curr_target, curr_text);
+            }), 2000);
 
             $("#search-text").keydown(function (key) {
                 if (key.keyCode == 13) {
-                    inquiry($(`#search-target`).val(), $(`#search-text`).val())
+                    inquiry($(`#search-target`).val(), $(`#search-text`).val());
                 }
             })
 
         })
 
 
-        function showJunglers(response) {
+        function showJunglers() {
             $.ajax({
                 type: "GET",
-                url: "/list",
+                url: "/search/list/all",
                 success: function (response) {
                     $("#jungler-column").html("");
                     showJunglerColum(response);
@@ -104,18 +100,18 @@
         }
 
         function inquiry(target, text) {
-            if (text.trim() !== '') {
-                $.ajax({
-                    url: `/search/${target}/${text}`,
-                    type: 'GET',
-                    success: function (response) {
-                        showJunglerColum(response);
-                    },
-                    error: function (error) {
-                        alert("서버 통신에 실패했습니다.");
-                    }
-                });
-            }
+            $.ajax({
+                url: `/search/${target}/${text}`,
+                type: 'GET',
+                success: function (response) {
+                    showJunglerColum(response);
+                },
+                error: function (error) {
+                    alert("서버 통신에 실패했습니다.");
+                    clearInterval(interval);
+                }
+            });
+            updateTarget(target, text);
         }
 
         // 요소 숨기고 보이는 토글 기능
@@ -135,6 +131,11 @@
             $(`#${id}`).addClass('is-success'); // 선택된 팀 버튼 강조
         }
 
+        function updateTarget(target, text) {
+            curr_target = target;
+            curr_text = text;
+        }
+
     </script>
 </head>
 
@@ -145,9 +146,6 @@
                 <p class="title">
                     정글러 동선
                 </p>
-                <!-- <p class="subtitle">
-                    Primary subtitle
-                </p> -->
             </div>
         </section>
 
@@ -223,7 +221,7 @@
 
                         <div class="block">
                             <button name="category-button" class="button is-medium is-rounded is-success" value="name"
-                                onclick="toggleHighlight(this.name, this.id), toggleCategory('category-name-detail-buttons'), showJunglers()"
+                                onclick="toggleHighlight(this.name, this.id), toggleCategory('category-name-detail-buttons'), inquiry(`list`, `all`)"
                                 id="category1">전체</button>
                             <button name="category-button" class="button is-medium is-rounded" value="place"
                                 onclick="toggleHighlight(this.name, this.id), toggleCategory('category-place-detail-buttons')"
