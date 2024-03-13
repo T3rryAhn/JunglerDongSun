@@ -100,18 +100,20 @@
         }
 
         function inquiry(target, text) {
-            $.ajax({
-                url: `/search/${target}/${text}`,
-                type: 'GET',
-                success: function (response) {
-                    showJunglerColum(response);
-                },
-                error: function (error) {
-                    alert("서버 통신에 실패했습니다.");
-                    clearInterval(interval);
-                }
-            });
-            updateTarget(target, text);
+            if (text.trim() !== '') {
+                $.ajax({
+                    url: `/search/${target}/${text}`,
+                    type: 'GET',
+                    success: function (response) {
+                        showJunglerColum(response);
+                    },
+                    error: function (error) {
+                        alert("서버 통신에 실패했습니다.");
+                        clearInterval(interval);
+                    }
+                });
+                updateTarget(target, text);
+            }
         }
 
         // 요소 숨기고 보이는 토글 기능
