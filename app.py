@@ -6,8 +6,6 @@ from flask import Flask, render_template, jsonify, request, session, url_for, re
 from dotenv import load_dotenv
 from datetime import datetime
 
-from datetime import datetime
-
 load_dotenv(verbose=True)
 
 # DB 설정
