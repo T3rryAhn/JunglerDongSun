@@ -4,6 +4,7 @@ import hashlib
 
 from flask import Flask, render_template, jsonify, request, session, url_for, redirect
 from dotenv import load_dotenv
+from datetime import datetime
 
 from datetime import datetime
 
@@ -70,20 +71,31 @@ def signup():
     _id_ = request.form['id']
     _pw_ = request.form['pw']
     _name_ = request.form['name']
+    _photo_ = request.files['photo']
 
     _cursor_ = _DB_.find_one({"user_id": _id_})
 
     if _cursor_:
         return jsonify({'message': '이미 사용 중인 아이디 입니다.'})
     else:
+        today = datetime.now()
+        mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+        filename = f'file-{mytime}'
+
+        # 확장자 나누기
+        extension = _photo_.filename.split('.')[-1]
+        # static 폴더에 저장
+        save_to = f'static/{filename}.{extension}'
+        _photo_.save(save_to)
+
         # 비밀번호 해시
         _HASH_ = hashlib.sha256()
         _HASH_.update(str(_pw_).encode('utf-8'))
         _PASS_ = _HASH_.hexdigest()
 
         _DB_.insert_one({"user_id": _id_, "user_pw": _PASS_, "user_name": _name_, "user_team": "1팀",
-                         "user_place": "비공개"})
-        session['username'] = _name_
+                         "user_place": "비공개", "user_photo": f'{filename}.{extension}'})
+
         return redirect(url_for("loginpage"))
 
 
