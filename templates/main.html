@@ -30,6 +30,10 @@
             margin-top: 24px;
             margin-bottom: 20px;
         }
+        .card{
+            border-color: #63c78e;
+            border-style: solid;
+        }
     </style>
     <script>
         let curr_target = "list";
@@ -140,11 +144,16 @@
         function makeColum(user_name, user_team, user_place, update_time) {
             let template = `<div class="column is-one-quarter">
                                 <div class="card">
-                                    <div class="card-content">
-                                        <h2>${user_name}</h2>
-                                        <p>${user_team}</p>
-                                        <p>${user_place}</p>
-                                        <span class="tag">${update_time}</span>
+                                    <div class="level-left">
+                                    <div class="level-item">
+                                        <img src="../static/{{myInfo.user_photo}}" style="object-fit: cover; height: 80px; width: 80px; border-radius: 80px 80px / 80px 80px;">
+                                        <div class="card-content">
+                                            <p class="title is-4">${user_name}</p>
+                                            <p class="subtitle is-6" style="display: inline-block">${user_team}</p>
+                                            <p class="is-4">${user_place}</p>
+                                            <span class="tag is-info is-light">${update_time}</span>
+                                        </div>
+                                    </div>
                                     </div>
                                 </div>
                             </div>`;
@@ -208,17 +217,13 @@
             <div class="container">
                 <div class="columns">
                     <div class="column is-one-quarter">
-                        <div class="box">
+                        <div class="box" style="border-color: #63c78e; border-style: solid;">
                             <input type="hidden" id="user_id" value={{myInfo.user_id}}>
-                            <div class="level">
-                                <div class="level-left">
-                                    <div class="level-item">
-                                        <img src="../static/{{myInfo.user_photo}}" style="object-fit: cover; height: 100px; width: 100px; border-radius: 80px 80px / 80px 80px;">
-                                    </div>
-                                </div>
-                                <div class="level-right">
-                                        <h2 class="is-size-2">{{myInfo.user_name}}</h2>
-                                </div>
+                            <div class="level-item" style="float: left; margin-right: 20px;">
+                                <img src="../static/{{myInfo.user_photo}}" style="object-fit: cover; height: 100px; width: 100px; border-radius: 80px 80px / 80px 80px;">
+                            </div>
+                            <div class="level-right" style="display: inline-block; height: 130px; text-align: center;">
+                                    <p class="is-size-2">{{myInfo.user_name}}</p>
                             </div>
                             <div class="level">
                                 <div class="level-left">

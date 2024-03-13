@@ -92,7 +92,7 @@ def signup():
         _PASS_ = _HASH_.hexdigest()
 
         _DB_.insert_one({"user_id": _id_, "user_pw": _PASS_, "user_name": _name_, "user_team": "1팀",
-                         "user_place": "비공개", "user_photo": f'{filename}.{extension}'})
+                         "user_place": "비공개", "user_photo": f'{filename}.{extension}', "update_time": today})
 
         return redirect(url_for("loginpage"))
 
