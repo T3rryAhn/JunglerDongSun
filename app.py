@@ -92,7 +92,8 @@ def signup():
         _PASS_ = _HASH_.hexdigest()
 
         _DB_.insert_one({"user_id": _id_, "user_pw": _PASS_, "user_name": _name_, "user_team": "1팀",
-                         "user_place": "비공개", "user_photo": f'{filename}.{extension}', "update_time": today})
+                         "user_place": "비공개", "user_photo": f'{filename}.{extension}', "$currentDate":
+                             {"update_time": True}})
 
         return redirect(url_for("loginpage"))
 
@@ -124,7 +125,7 @@ def insert():
         }
         _DB_CATEGORY.insert_one(tem)
     cnt = 1
-    place = {"기숙사", "식당", "L401", "L403", "L405", "L407", "휴게실", "체력단련실", "교외", "비공개"}
+    place = {"기숙사", "식당", "L401호", "L403호", "L405호", "L407호", "휴게실", "체력단련실", "교외", "비공개"}
     for i in place:
         tem = {
             'place': str(i),

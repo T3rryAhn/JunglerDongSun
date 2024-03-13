@@ -111,9 +111,9 @@
                 <label class="label">ID</label>
                 <div class="control has-icons-left">
                     {% if userID %}
-                    <input name="id" class="input" type="text" value="{{userID}}">
+                    <input name="id" class="input" type="text" value="{{userID}}" required>
                     {% else %}
-                    <input name="id" class="input" type="text" placeholder="ID">
+                    <input name="id" class="input" type="text" placeholder="ID" required>
                     {% endif %}
                     <span class="icon is-small is-left">
                          <i class="fas fa-user"></i>
@@ -125,7 +125,7 @@
             <div class="field">
                 <label class="label">Password</label>
                 <div class="control has-icons-left">
-                    <input id="login-pw" name="pw" class="input" type="text" placeholder="Password">
+                    <input id="login-pw" name="pw" class="input" type="password" placeholder="Password" required>
                     <span class="icon is-small is-left">
                         <i class="fas fa-lock"></i>
                     </span>

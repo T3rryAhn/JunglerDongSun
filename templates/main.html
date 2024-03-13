@@ -63,9 +63,9 @@
                 })
             });
 
-            // interval = setInterval((function () {
-            //     inquiry(curr_target, curr_text);
-            // }), 2000);
+            interval = setInterval((function () {
+                inquiry(curr_target, curr_text);
+            }), 2000);
 
             $("#search-text").keydown(function (key) {
                 if (key.keyCode == 13) {
@@ -132,28 +132,28 @@
                         console.log(minutesDifference + '분 전');
                         update_time = minutesDifference + '분 전'
                     } else {
-                        console.log(secondsDifference + '초 전');
-                        update_time = minutesDifference + '초 전'
+                        console.log('방금전');
+                        update_time = '방금전'
                     }
 
-                    makeColum(junglers[i]["user_name"], junglers[i]["user_team"], junglers[i]["user_place"], update_time);
+                    makeColum(junglers[i]["user_name"], junglers[i]["user_team"], junglers[i]["user_place"],  junglers[i]["user_photo"], update_time);
                 }
             }
         }
 
-        function makeColum(user_name, user_team, user_place, update_time) {
+        function makeColum(user_name, user_team, user_place, user_photo, update_time) {
             let template = `<div class="column is-one-quarter">
-                                <div class="card">
-                                    <div class="level-left">
+                                <div class="card" style="padding: 20px">
                                     <div class="level-item">
-                                        <img src="../static/{{myInfo.user_photo}}" style="object-fit: cover; height: 80px; width: 80px; border-radius: 80px 80px / 80px 80px;">
+                                        <div style="text-align: center">
+                                            <img src="../static/${user_photo}" style="object-fit: cover; height: 80px; width: 80px; border-radius: 80px 80px / 80px 80px;">
+                                            <p class="subtitle is-5">${user_name}</p>
+                                        </div>
                                         <div class="card-content">
-                                            <p class="title is-4">${user_name}</p>
-                                            <p class="subtitle is-6" style="display: inline-block">${user_team}</p>
-                                            <p class="is-4">${user_place}</p>
+                                            <p class="subtitle is-4" style="padding-bottom: 10px">${user_team}</p>
+                                            <p class="subtitle is-4" style="padding-bottom: 10px">${user_place}</p>
                                             <span class="tag is-info is-light">${update_time}</span>
                                         </div>
-                                    </div>
                                     </div>
                                 </div>
                             </div>`;
@@ -206,10 +206,10 @@
     <div class="container">
         <section class="hero is-small is-success">
             <div class="hero-body">
-                <p class="title" style="float: left">
+                <p class="title" style="float: left; margin:10px">
                     정글러 동선
                 </p>
-                <a href="/logout" class="button is-small" style="float: right">로그아웃</a>
+                <a href="/logout" class="button is-rounded is-small" style="float: right; margin: 15px">로그아웃</a>
             </div>
         </section>
 
@@ -219,11 +219,11 @@
                     <div class="column is-one-quarter">
                         <div class="box" style="border-color: #63c78e; border-style: solid;">
                             <input type="hidden" id="user_id" value={{myInfo.user_id}}>
-                            <div class="level-item" style="float: left; margin-right: 20px;">
-                                <img src="../static/{{myInfo.user_photo}}" style="object-fit: cover; height: 100px; width: 100px; border-radius: 80px 80px / 80px 80px;">
+                            <div class="level-item">
+                                <img src="../static/{{myInfo.user_photo}}" style="object-fit: cover; height: 120px; width: 120px; border-radius: 80px 80px / 80px 80px;">
                             </div>
-                            <div class="level-right" style="display: inline-block; height: 130px; text-align: center;">
-                                    <p class="is-size-2">{{myInfo.user_name}}</p>
+                            <div class="level-item" style="padding-bottom: 20px; text-align: center;">
+                                <p class="is-size-4">{{myInfo.user_name}}</p>
                             </div>
                             <div class="level">
                                 <div class="level-left">
