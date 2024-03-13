@@ -26,17 +26,15 @@
     </style>
     <script>
         $(document).ready(function () {
-            // showJunglers();
-            console.log($("#user_team_selector").val());
+            showJunglers();
 
             $("#user_team_selector").change(function () {
-                let id_num = $("#id_num").val();
+                let user_id = $("#user_id").val();
                 let user_team = $("#user_team_selector").val();
-                // let user_team = $("#user_team_selector >option:selected").attr('value');
                 $.ajax({
                     type: "POST",
                     url: "/update/team",
-                    data: { "id_num": id_num, "user_team": user_team },
+                    data: { "user_id": user_id, "user_team": user_team },
                     success: function (response) {
                         if (response["result"] == "success") {
                             alert("팀저장됨");
@@ -46,12 +44,12 @@
             });
 
             $("#user_place_selector").change(function () {
-                let id_num = $("#id_num").val();
+                let user_id = $("#user_id").val();
                 let user_place = $("#user_place_selector").val();
                 $.ajax({
                     type: "POST",
                     url: "/update/place",
-                    data: { "id_num": id_num, "user_place": user_place },
+                    data: { "user_id": user_id, "user_place": user_place },
                     success: function (response) {
                         if (response["result"] == "success") {
                             alert("장소저장됨");
@@ -60,9 +58,42 @@
                 })
             });
 
+            // setInterval(showJunglers, 2000);
         })
 
-<<<<<<< HEAD
+        function showJunglers(response) {
+            $("#jungler-column").html("");
+            $.ajax({
+                type: "GET",
+                url: "/list",
+                success: function (response) {
+                    showJunglerColum(response);
+                }
+            })
+        }
+
+        function showJunglerColum(response) {
+            if (response["result"] == "success") {
+                let junglers = response["junglers"];
+                for (let i = 0; i < junglers.length; i++) {
+                    makeColum(junglers[i]["user_name"], junglers[i]["user_team"], junglers[i]["user_place"])
+                }
+            }
+        }
+
+        function makeColum(user_name, user_team, user_place) {
+            let template = `<div class="column is-one-quarter">
+                                <div class="card">
+                                    <div class="card-content">
+                                        <h2>${user_name}</h2>
+                                        <p>${user_team}</p>
+                                        <p>${user_place}</p>
+                                    </div>
+                                </div>
+                            </div>`;
+            $("#jungler-column").append(template);
+        }
+
         function inquiry(target, text) {
             if (text.trim() !== '') {
                 $.ajax({
@@ -73,18 +104,6 @@
                     },
                     error: function (error) {
                         alert("서버 통신에 실패했습니다.");
-=======
-        function search(target, text) {
-            $.ajax({
-                url: `/search/${target}/${text}`,
-                type: 'GET',
-                success: function (response) {
-
-                    if (response["result"] == "success") {
-                        alert("검색 성공");
-                    } else {
-                        alert("검색 실패");
->>>>>>> ac9ba5dcbaa3e95a5251331b24b48c82b26f9935
                     }
                 });
             }
@@ -112,19 +131,19 @@
         }
 
         // 요소 숨기고 보이는 토글 기능
-        function toggleDisplay(id){
+        function toggleDisplay(id) {
             $(`#${id}`).toggle();
         }
 
         // 카테고리 토글
-        function toggleCategory(id){
-          $(`div[name=category-detail-buttons]`).hide();
-          toggleDisplay(id);
+        function toggleCategory(id) {
+            $(`div[name=category-detail-buttons]`).hide();
+            toggleDisplay(id);
         }
 
         // 하이라이트 토글
-        function toggleHighlight(name, id){
-          $(`button[name=${name}]`).removeClass('is-success'); // 모든 버튼 비활성화
+        function toggleHighlight(name, id) {
+            $(`button[name=${name}]`).removeClass('is-success'); // 모든 버튼 비활성화
             $(`#${id}`).addClass('is-success'); // 선택된 팀 버튼 강조
         }
 
@@ -149,28 +168,25 @@
                 <div class="columns">
                     <div class="column is-one-quarter">
                         <div class="box">
-                            <input type="hidden" id="id_num" value="2">
+                            <input type="hidden" id="user_id" value={{myInfo.user_id}}>
                             <div class="field has-addons">
-                                <h2 class="is-size-4">{{ userInfo[1] }}</h2>
+                                <h2 class="is-size-4">{{myInfo.user_name}}</h2>
                                 <a href="{{ url_for('logout') }}" class="button">로그아웃</a>
                             </div>
                             <div class="field has-addons">
                                 <p class="control">팀</p>
                                 <p class="control">
                                     <span class="select is-dark is-small">
-                                        <select id="user_team_selector" aria-label="{{ userInfo[2] }}" required>
-                                            <option>1팀</option>
-                                            <option>2팀</option>
-                                            <option>3팀</option>
-                                            <option>4팀</option>
-                                            <option>5팀</option>
-                                            <option>6팀</option>
-                                            <option>7팀</option>
-                                            <option>8팀</option>
-                                            <option>9팀</option>
-                                            <option>10팀</option>
-                                            <option>11팀</option>
-                                            <option>12팀</option>
+                                        <select id="user_team_selector" required>
+                                            {% for cate in category %}
+                                            {% for key, value in cate.items() %}
+                                            {% if key == "team" and value == myInfo.user_team %}
+                                            <option selected>{{value}}</option>
+                                            {% elif key == "team" %}
+                                            <option>{{value}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                            {% endfor %}
                                         </select>
                                     </span>
                                 </p>
@@ -179,14 +195,16 @@
                                 <p class="control">장소</p>
                                 <p class="control">
                                     <span class="select is-dark is-small">
-                                        <select id="user_place_selector" value="{{ userInfo[3] }}" required>
-                                            <option>기숙사</option>
-                                            <option>식당</option>
-                                            <option>407 강의동</option>
-                                            <option>401 강의동</option>
-                                            <option>체력단련실</option>
-                                            <option>교외</option>
-                                            <option>비공개</option>
+                                        <select id="user_place_selector" required>
+                                            {% for cate in category %}
+                                            {% for key, value in cate.items() %}
+                                            {% if key == "place" and value == myInfo.user_place %}
+                                            <option selected>{{value}}</option>
+                                            {% elif key == "place" %}
+                                            <option>{{value}}</option>
+                                            {% endif %}
+                                            {% endfor %}
+                                            {% endfor %}
                                         </select>
                                     </span>
                                 </p>
@@ -208,65 +226,88 @@
                                 <input id="search-text" class="input" type="text" placeholder="검색어를 입력하세요.">
                             </p>
                             <p class="control">
-                                <a class="button is-light" onclick='inquiry($(`#search-target`).val(), $(`#search-text`).val())'>
+                                <a class="button is-light"
+                                    onclick='inquiry($(`#search-target`).val(), $(`#search-text`).val())'>
                                     검색
                                 </a>
                             </p>
                         </div>
 
                         <div class="block">
-                            <button name="category-button" class="button is-medium is-rounded is-success" value="name" onclick="toggleHighlight(this.name, this.id), toggleCategory('category-name-detail-buttons'), fillJunglers()" id="category1">이름</button>
-                            <button name="category-button" class="button is-medium is-rounded" value="place" onclick="toggleHighlight(this.name, this.id), toggleCategory('category-place-detail-buttons')" id="category2">장소</button>
-                            <button name="category-button" class="button is-medium is-rounded" value="team" onclick="toggleHighlight(this.name, this.id), toggleCategory('category-team-detail-buttons')" id="category3">팀</button>
+                            <button name="category-button" class="button is-medium is-rounded is-success" value="name"
+                                onclick="toggleHighlight(this.name, this.id), toggleCategory('category-name-detail-buttons'), fillJunglers()"
+                                id="category1">이름</button>
+                            <button name="category-button" class="button is-medium is-rounded" value="place"
+                                onclick="toggleHighlight(this.name, this.id), toggleCategory('category-place-detail-buttons')"
+                                id="category2">장소</button>
+                            <button name="category-button" class="button is-medium is-rounded" value="team"
+                                onclick="toggleHighlight(this.name, this.id), toggleCategory('category-team-detail-buttons')"
+                                id="category3">팀</button>
                         </div>
 
                         <div class="block">
-                            <div name="category-detail-buttons" id="category-name-detail-buttons" style="display: block;">
+                            <div name="category-detail-buttons" id="category-name-detail-buttons"
+                                style="display: block;">
 
                             </div>
-                            <div name="category-detail-buttons" id="category-place-detail-buttons" style="display: none;">
-                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place1">기숙사</button>
-                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place2">식당</button>
-                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place3">L407</button>
-                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place4">L401</button>
-                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place5">체력단련실</button>
-                                <button name="category-detail" class="button is-normal is-rounded" onclick="toggleHighlight(this.name, this.id)" id="place6">교외</button>
+                            <div name="category-detail-buttons" id="category-place-detail-buttons"
+                                style="display: none;">
+                                <button name="category-detail" class="button is-normal is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="place1">기숙사</button>
+                                <button name="category-detail" class="button is-normal is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="place2">식당</button>
+                                <button name="category-detail" class="button is-normal is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="place3">L407</button>
+                                <button name="category-detail" class="button is-normal is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="place4">L401</button>
+                                <button name="category-detail" class="button is-normal is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="place5">체력단련실</button>
+                                <button name="category-detail" class="button is-normal is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="place6">교외</button>
                             </div>
-                            <div name="category-detail-buttons" id="category-team-detail-buttons" style="display: none;">
-                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team1">1팀</button>
-                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team2">2팀</button>
-                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team3">3팀</button>
-                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team4">4팀</button>
-                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team5">5팀</button>
-                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team6">6팀</button>
-                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team7">7팀</button>
-                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team8">8팀</button>
-                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team9">9팀</button>
-                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team10">10팀</button>
-                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team11">11팀</button>
-                                <button name="category-detail" class="button is-small is-rounded" onclick="toggleHighlight(this.name, this.id)" id="team12">12팀</button>
+                            <div name="category-detail-buttons" id="category-team-detail-buttons"
+                                style="display: none;">
+                                <button name="category-detail" class="button is-small is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="team1">1팀</button>
+                                <button name="category-detail" class="button is-small is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="team2">2팀</button>
+                                <button name="category-detail" class="button is-small is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="team3">3팀</button>
+                                <button name="category-detail" class="button is-small is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="team4">4팀</button>
+                                <button name="category-detail" class="button is-small is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="team5">5팀</button>
+                                <button name="category-detail" class="button is-small is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="team6">6팀</button>
+                                <button name="category-detail" class="button is-small is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="team7">7팀</button>
+                                <button name="category-detail" class="button is-small is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="team8">8팀</button>
+                                <button name="category-detail" class="button is-small is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="team9">9팀</button>
+                                <button name="category-detail" class="button is-small is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="team10">10팀</button>
+                                <button name="category-detail" class="button is-small is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="team11">11팀</button>
+                                <button name="category-detail" class="button is-small is-rounded"
+                                    onclick="toggleHighlight(this.name, this.id)" id="team12">12팀</button>
                             </div>
                         </div>
-                        
-                        
+
+
                     </div>
                 </div>
             </div>
         </section>
         <section class="section">
             <div class="container">
-                <div class="columns is-multiline">
-                    {% for j in junglers %}
+                <div class="columns is-multiline" id="jungler-column">
                     <div class="column is-one-quarter">
                         <div class="card">
-                            <div class="card-content">
-                                <h2>{{j.user_name}}</h2>
-                                <p>{{j.user_team}}</p>
-                                <p>{{j.user_place}}</p>
+                            <div class="card-content" id="jungler-content">
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
                 </div>
             </div>
         </section>
