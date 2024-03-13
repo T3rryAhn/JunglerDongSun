@@ -1,24 +1,25 @@
-import os
-import pymongo
+import os, pymongo, hashlib
 
 from flask import Flask, render_template, jsonify, request, session, url_for, redirect
 from dotenv import load_dotenv
 
 load_dotenv(verbose=True)
+
+# DB 설정
 _PATH_ = os.getenv('MONGO_DB_PATH')
-_KEY_ = os.getenv('KEY')
 _DB_ = pymongo.MongoClient(_PATH_).week00_junglerDongsun.junglers
 _DB_CATEGORY = pymongo.MongoClient(_PATH_).week00_junglerDongsun.category
 
+# Flask 키 설정
+_KEY_ = os.getenv('KEY')
 app = Flask(__name__)
 app.secret_key = _KEY_
-
 
 # 로그인 동작부
 @app.route('/')
 def loginpage():
-    if 'userInfo' in session:
-        return redirect(url_for(main))
+    if 'userID' in session:
+        return redirect(url_for("main"))
     else:
         if '_memorize_' in session:
             return render_template("loginpage.html", userID=session.get('_memorize_'), login=False)
@@ -36,11 +37,16 @@ def login():
     elif '_memorize_' in session:
         session.pop('_memorize_')
 
+    _HASH_ = hashlib.sha256()
+    _HASH_.update(str(_pw_).encode('utf-8'))
+    _pw_ = _HASH_.hexdigest()
+
+    print(_pw_)
+
     _cursor_ = _DB_.find_one({"user_id": _id_, "user_pw": _pw_})
 
     if _cursor_:
         session['userID'] = _id_
-
         return redirect(url_for("loginpage"))
     else:
         return redirect(url_for("loginpage"))
@@ -100,12 +106,10 @@ def insert():
 
 @app.route("/main")
 def main():
-    _id_ = session['userID']
-
-    _userinfo_ = _DB_.find({"user_id": _id_}, {'_id': 0})
-
-    junglers = list(_DB_.find({}, {'_id': 0}))
-    return render_template('main.html', userInfo=_userinfo_, login=True, junglers=junglers)
+    user_id = session.get('userID')
+    myInfo = _DB_.find_one({"user_id":user_id}, {'_id':0, 'pw':0})
+    category = list(_DB_CATEGORY.find({}, {'_id':0}))
+    return render_template('main.html', myInfo = myInfo, category = category, login=True)
 
 @app.route("/list", methods=["GET"])
 def listing():
