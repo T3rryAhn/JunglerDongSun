@@ -16,8 +16,8 @@ app.secret_key = _KEY_
 # 로그인 동작부
 @app.route('/')
 def loginpage():
-    if 'userInfo' in session:
-        return render_template("main.html", userInfo=session.get('userInfo'), login=True)
+    if 'userID' in session:
+        return redirect(url_for("main"))
     else:
         if '_memorize_' in session:
             return render_template("loginpage.html", userID=session.get('_memorize_'), login=False)
@@ -38,12 +38,7 @@ def login():
     _cursor_ = _DB_.find_one({"user_id": _id_, "user_pw": _pw_})
 
     if _cursor_:
-        session['userInfo'] = []
-
-        session['userInfo'].append(_cursor_["user_id"])
-        session['userInfo'].append(_cursor_["user_name"])
-        session['userInfo'].append(_cursor_["user_team"])
-        session['userInfo'].append(_cursor_["user_place"])
+        session['userID'] = _id_
 
         return redirect(url_for("loginpage"))
     else:
@@ -52,7 +47,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    session.pop('userInfo')
+    session.pop('userID')
     return redirect(url_for("loginpage"))
 
 
@@ -96,11 +91,14 @@ def insert():
     return jsonify({'result': "success"})
 
 
-@app.route("/main")  # Test 종료 후 삭제 요
+@app.route("/main")
 def main():
-    # myInfo = _DB_.find({"id_num":int(id_num)}, {'_id':0})
+    _id_ = session['userID']
+
+    _userinfo_ = _DB_.find({"user_id": _id_}, {'_id': 0})
+
     junglers = list(_DB_.find({}, {'_id': 0}))
-    return render_template('main.html', junglers=junglers)
+    return render_template('main.html', userInfo=_userinfo_, login=True, junglers=junglers)
 
 
 @app.route("/update/team", methods=["POST"])
@@ -140,4 +138,4 @@ def searchByPlace(place):
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5005, debug=True)
