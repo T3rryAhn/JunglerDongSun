@@ -20,9 +20,16 @@
     <script src="https://kit.fontawesome.com/59db0249c2.js" crossorigin="anonymous"></script>
 
     <title>정글러 동선</title>
-
     <!-- style -->
     <style type="text/css">
+        .level:not(:last-child) {
+            margin-bottom: 0.9rem;
+        }
+
+        .select-section {
+            margin-top: 24px;
+            margin-bottom: 20px;
+        }
     </style>
     <script>
         let curr_target = "list";
@@ -52,9 +59,9 @@
                 })
             });
 
-            interval = setInterval((function () {
-                inquiry(curr_target, curr_text);
-            }), 2000);
+            // interval = setInterval((function () {
+            //     inquiry(curr_target, curr_text);
+            // }), 2000);
 
             $("#search-text").keydown(function (key) {
                 if (key.keyCode == 13) {
@@ -81,18 +88,63 @@
                 $("#jungler-column").html("");
                 let junglers = response["junglers"];
                 for (let i = 0; i < junglers.length; i++) {
-                    makeColum(junglers[i]["user_name"], junglers[i]["user_team"], junglers[i]["user_place"])
+                    // MongoDB에서 가져온 시간 (예: ISODate("2024-03-10T12:00:00Z"))
+                    var mongodbDate = new Date(junglers[i]["update_time"]);
+                    console.log(mongodbDate)
+                    // 한국 시간으로 변환
+                    var koreanDate = new Date(mongodbDate.toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
+                    console.log(koreanDate)
+
+                    // 현재 시간
+                    var currentDate = new Date();
+                    console.log(currentDate)
+
+                    // 시간 차이를 계산합니다. 밀리초로 반환됩니다.
+                    var timeDifference = currentDate.getTime() - koreanDate.getTime();
+
+                    // 밀리초를 일, 시간 등으로 변환합니다.
+                    var secondsDifference = Math.floor(timeDifference / 1000);
+                    var minutesDifference = Math.floor(secondsDifference / 60);
+                    var hoursDifference = Math.floor(minutesDifference / 60);
+                    var daysDifference = Math.floor(hoursDifference / 24);
+
+                    var update_time;
+
+                    // 결과를 표시합니다.
+                    if (daysDifference > 0) {
+                        console.log(daysDifference)
+                        if (daysDifference > 30) {
+                            console.log('옛날옛적에...');
+                            update_time = '옛날옛적에...'
+                        }
+                        else {
+                            console.log(daysDifference + '일 전');
+                            update_time = daysDifference + '일 전'
+                        }
+                    } else if (hoursDifference > 0) {
+                        console.log(hoursDifference + '시간 전');
+                        update_time = hoursDifference + '시간 전'
+                    } else if (minutesDifference > 0) {
+                        console.log(minutesDifference + '분 전');
+                        update_time = minutesDifference + '분 전'
+                    } else {
+                        console.log(secondsDifference + '초 전');
+                        update_time = minutesDifference + '초 전'
+                    }
+
+                    makeColum(junglers[i]["user_name"], junglers[i]["user_team"], junglers[i]["user_place"], update_time);
                 }
             }
         }
 
-        function makeColum(user_name, user_team, user_place) {
+        function makeColum(user_name, user_team, user_place, update_time) {
             let template = `<div class="column is-one-quarter">
                                 <div class="card">
                                     <div class="card-content">
                                         <h2>${user_name}</h2>
                                         <p>${user_team}</p>
                                         <p>${user_place}</p>
+                                        <span class="tag">${update_time}</span>
                                     </div>
                                 </div>
                             </div>`;
@@ -145,9 +197,10 @@
     <div class="container">
         <section class="hero is-small is-success">
             <div class="hero-body">
-                <p class="title">
+                <p class="title" style="float: left">
                     정글러 동선
                 </p>
+                <a href="/logout" class="button is-small" style="float: right">로그아웃</a>
             </div>
         </section>
 
@@ -157,49 +210,66 @@
                     <div class="column is-one-quarter">
                         <div class="box">
                             <input type="hidden" id="user_id" value={{myInfo.user_id}}>
-                            <div style="float: left; width: 100px; margin-right: 15px">
-                                <img src="https://cdn.pixabay.com/photo/2013/07/13/10/44/man-157699_640.png">
-                                <h2 class="is-size-4">{{myInfo.user_name}}</h2>
+                            <div class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <img src="../static/{{myInfo.user_photo}}" style="object-fit: cover; height: 100px; width: 100px; border-radius: 80px 80px / 80px 80px;">
+                                    </div>
+                                </div>
+                                <div class="level-right">
+                                        <h2 class="is-size-2">{{myInfo.user_name}}</h2>
+                                </div>
                             </div>
-                            <div style="display: inline-block">
-                                <div class="field has-addons">
-                                    <a href="/logout" class="button">로그아웃</a>
+                            <div class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <p>팀</p>
+                                    </div>
                                 </div>
-                                <div class="field has-addons">
-                                    <p class="control">팀</p>
-                                    <p class="control">
-                                        <span class="select is-dark is-small">
-                                            <select id="user_team_selector" required>
-                                                {% for cate in category %}
-                                                {% for key, value in cate.items() %}
-                                                {% if key == "team" and value == myInfo.user_team %}
-                                                <option selected>{{value}}</option>
-                                                {% elif key == "team" %}
-                                                <option>{{value}}</option>
-                                                {% endif %}
-                                                {% endfor %}
-                                                {% endfor %}
-                                            </select>
-                                        </span>
-                                    </p>
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <p>
+                                            <span class="select is-dark is-small">
+                                                <select id="user_team_selector" style="width: 120px; text-align: center" required>
+                                                    {% for cate in category %}
+                                                    {% for key, value in cate.items() %}
+                                                    {% if key == "team" and value == myInfo.user_team %}
+                                                    <option selected>{{value}}</option>
+                                                    {% elif key == "team" %}
+                                                    <option>{{value}}</option>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    {% endfor %}
+                                                </select>
+                                            </span>
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="field has-addons">
-                                    <p class="control">장소</p>
-                                    <p class="control">
-                                        <span class="select is-dark is-small">
-                                            <select id="user_place_selector" required>
-                                                {% for cate in category %}
-                                                {% for key, value in cate.items() %}
-                                                {% if key == "place" and value == myInfo.user_place %}
-                                                <option selected>{{value}}</option>
-                                                {% elif key == "place" %}
-                                                <option>{{value}}</option>
-                                                {% endif %}
-                                                {% endfor %}
-                                                {% endfor %}
-                                            </select>
-                                        </span>
-                                    </p>
+                            </div>
+                            <div class="level">
+                                <div class="level-left">
+                                    <div class="level-item">
+                                        <p>장소</p>
+                                    </div>
+                                </div>
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <p>
+                                            <span class="select is-dark is-small">
+                                                <select id="user_place_selector" style="width: 120px; text-align: center" required>
+                                                    {% for cate in category %}
+                                                    {% for key, value in cate.items() %}
+                                                    {% if key == "place" and value == myInfo.user_place %}
+                                                    <option selected>{{value}}</option>
+                                                    {% elif key == "place" %}
+                                                    <option>{{value}}</option>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    {% endfor %}
+                                                </select>
+                                            </span>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -219,14 +289,14 @@
                                 <input id="search-text" class="input" type="text" placeholder="검색어를 입력하세요.">
                             </p>
                             <p class="control">
-                                <a class="button is-light"
+                                <a class="button is-success"
                                     onclick='inquiry($(`#search-target`).val(), $(`#search-text`).val())'>
                                     검색
                                 </a>
                             </p>
                         </div>
 
-                        <div class="block">
+                        <div class="block select-section">
                             <button name="category-button" class="button is-medium is-rounded is-success" value="name"
                                 onclick="toggleHighlight(this.name, this.id), toggleHighlight('category-detail', this.id), toggleCategory('category-name-detail-buttons'), inquiry(`list`, `all`)"
                                 id="category1">전체</button>
@@ -273,6 +343,9 @@
                     </div>
                 </div>
             </div>
+        </section>
+        <section>
+
         </section>
         <section class="section">
             <div class="container">
