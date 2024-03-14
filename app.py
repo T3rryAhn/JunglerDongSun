@@ -166,7 +166,7 @@ def update_place():
 
 # 조회 검색어
 
-@app.route("/search/list/all", methods=["POST"])
+@app.route("/search/list/all", methods=["GET"])
 def listing():
     junglers = list(_DB_.find({}, {'_id': 0, 'user_pw': 0}))
 
