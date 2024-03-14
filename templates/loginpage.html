@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>로그인 페이지</title>
 
@@ -77,8 +77,8 @@
 
             //이미지 source 가져오기
             newImage.setAttribute('src', URL.createObjectURL(file));
-            newImage.style.width = "200px"; //div에 꽉차게 넣으려고
-            newImage.style.height = "300px";
+            newImage.style.width = "150px"; //div에 꽉차게 넣으려고
+            newImage.style.height = "150px";
             newImage.style.objectFit = "cover"; // div에 넘치지 않고 들어가게
         }
     </script>
@@ -86,20 +86,19 @@
     <!-- style -->
     <style>
         .addImage {
-            
-            width: 200px;
-            height: 300px;
+            width: 150px;
+            height: 150px;
             background-color: lightgray;
-            border-radius: 20px 20px / 20px 20px;
+            border-radius: 100px;
             overflow: hidden;
-            margin: 0px 10px 10px 0px;
+            margin: 10px 10px 45px 10px;
             align-self: center;
         }
     </style>
 </head>
 
-<body>
-    <div class="container" style="width: 600px; border: 2px solid black; border-radius: 20px; padding: 20px; margin-top: 20px">
+<body style="-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none">
+    <div class="container" style="width: 420px; border: 2px solid black; border-radius: 20px; padding: 20px; margin-top: 20px">
         <br>
 
         <h1 class="is-size-1" style="text-align: center">정글러 동선</h1>
@@ -145,8 +144,8 @@
             <br><br><br>
 
             <div class="field">
-                <button type="submit" class="button is-success is-outlined" style="width: 270px; float: left">로그인</button>
-                <button type="button" class="button is-info is-outlined" style="width: 270px; float: right" onclick="toggleForm()">회원가입</button>
+                <button type="submit" class="button is-success is-outlined" style="width: 180px; float: left">로그인</button>
+                <button type="button" class="button is-info is-outlined" style="width: 180px; float: right" onclick="toggleForm()">회원가입</button>
             </div>
 
             <br><br>
@@ -154,7 +153,7 @@
 
         <!-- 회원가입 -->
         <form id="signup-form" action="/signup" method="POST" style="display: none" enctype="multipart/form-data" onsubmit="return checkId()">
-            <div name="left-side" style="float: left; width: 280px">
+            <div name="left-side" style="float: left; width: 180px">
                 <div class="field">
                     <label class="label">ID</label>
                     <div class="control has-icons-left has-icons-right">
@@ -192,21 +191,19 @@
                 </div>
             </div>
 
-            <div name="right-side" style="margin-left: 50px; display: inline-block;">
-                <div class="field">
+            <div name="right-side" style="display: inline-block;">
+                <div class="field" style="margin-left: 10px; width: 180px;">
                     <label class="label">사진</label>
-                    <div class="control">
                         <img class="addImage" id="image-show" src="https://cdn.pixabay.com/photo/2013/07/13/10/44/man-157699_640.png"></img><br>
                         <input id="sign-photo" name="photo" class="input" type="file" accept="image/*" placeholder="경로"
-                               style="width: 200px" onchange="loadFile(this)" required>
-                    </div>
+                                onchange="loadFile(this)" required>
                 </div>
             </div>
 
             <br><br>
             <div class="field">
-                <button type="button" class="button is-outlined" onclick="toggleForm()" style="width: 270px; float: left">뒤로가기</button>
-                <button id="signup-submit" type="submit" class="button is-info is-outlined" style="width: 270px; float: right">가입하기</button>
+                <button type="button" class="button is-outlined" onclick="toggleForm()" style="width: 180px; float: left">뒤로가기</button>
+                <button id="signup-submit" type="submit" class="button is-info is-outlined" style="width: 180px; float: right">가입하기</button>
             </div>
 
             <br><br>

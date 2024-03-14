@@ -116,24 +116,24 @@ def loginpage():
 # main 상단
 
 
-@app.route("/insert")
-def insert():
-    for i in range(1, 13):
-        tem = {
-            'team': str(i)+"팀",
-            'index': int(i)
-        }
-        _DB_CATEGORY.insert_one(tem)
-    cnt = 1
-    place = {"기숙사", "식당", "L401호", "L403호", "L405호", "L407호", "휴게실", "체력단련실", "교외", "비공개"}
-    for i in place:
-        tem = {
-            'place': str(i),
-            'index': cnt
-        }
-        _DB_CATEGORY.insert_one(tem)
-        cnt += 1
-    return jsonify({'result': "success"})
+# @app.route("/insert")
+# def insert():
+#     for i in range(1, 13):
+#         tem = {
+#             'team': str(i)+"팀",
+#             'index': int(i)
+#         }
+#         _DB_CATEGORY.insert_one(tem)
+#     cnt = 1
+#     place = {"기숙사", "식당", "L401호", "L403호", "L405호", "L407호", "휴게실", "체력단련실", "교외", "비공개"}
+#     for i in place:
+#         tem = {
+#             'place': str(i),
+#             'index': cnt
+#         }
+#         _DB_CATEGORY.insert_one(tem)
+#         cnt += 1
+#     return jsonify({'result': "success"})
 
 
 @app.route("/main")
@@ -166,27 +166,31 @@ def update_place():
 
 # 조회 검색어
 
-@app.route("/search/list/all", methods=["GET"])
+@app.route("/search/list/all", methods=["POST"])
 def listing():
-    junglers = list(_DB_.find({}, {'_id': 0}))
+    junglers = list(_DB_.find({}, {'_id': 0, 'user_pw': 0}))
+
     return jsonify({'result': 'success', 'junglers': junglers})
 
 
 @app.route("/search/name/<name>", methods=["GET"])
 def search_by_name(name):
-    result = list(_DB_.find({"user_name": {'$regex': name}}, {'_id': 0}))
+    result = list(_DB_.find({"user_name": {'$regex': name}}, {'_id': 0, 'user_pw': 0}))
+
     return jsonify({'result': 'success', 'junglers': result})
 
 
 @app.route("/search/team/<team>", methods=["GET"])
 def search_by_team(team):
-    result = list(_DB_.find({"user_team": {'$regex': team}}, {'_id': 0}))
+    result = list(_DB_.find({"user_team": {'$regex': team}}, {'_id': 0, 'user_pw': 0}))
+
     return jsonify({'result': 'success', 'junglers': result})
 
 
 @app.route("/search/place/<place>", methods=["GET"])
 def search_by_place(place):
-    result = list(_DB_.find({"user_place": {'$regex': place}}, {'_id': 0}))
+    result = list(_DB_.find({"user_place": {'$regex': place}}, {'_id': 0, 'user_pw': 0}))
+
     return jsonify({'result': 'success', 'junglers': result})
 
 

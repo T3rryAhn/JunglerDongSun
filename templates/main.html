@@ -78,7 +78,7 @@
 
         function showJunglers() {
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "/search/list/all",
                 success: function (response) {
                     $("#jungler-column").html("");
@@ -94,14 +94,14 @@
                 for (let i = 0; i < junglers.length; i++) {
                     // MongoDB에서 가져온 시간 (예: ISODate("2024-03-10T12:00:00Z"))
                     var mongodbDate = new Date(junglers[i]["update_time"]);
-                    console.log(mongodbDate)
+
                     // 한국 시간으로 변환
                     var koreanDate = new Date(mongodbDate.toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
-                    console.log(koreanDate)
+
 
                     // 현재 시간
                     var currentDate = new Date();
-                    console.log(currentDate)
+
 
                     // 시간 차이를 계산합니다. 밀리초로 반환됩니다.
                     var timeDifference = currentDate.getTime() - koreanDate.getTime();
@@ -116,23 +116,23 @@
 
                     // 결과를 표시합니다.
                     if (daysDifference > 0) {
-                        console.log(daysDifference)
+
                         if (daysDifference > 30) {
-                            console.log('옛날옛적에...');
+
                             update_time = '옛날옛적에...'
                         }
                         else {
-                            console.log(daysDifference + '일 전');
+
                             update_time = daysDifference + '일 전'
                         }
                     } else if (hoursDifference > 0) {
-                        console.log(hoursDifference + '시간 전');
+
                         update_time = hoursDifference + '시간 전'
                     } else if (minutesDifference > 0) {
-                        console.log(minutesDifference + '분 전');
+
                         update_time = minutesDifference + '분 전'
                     } else {
-                        console.log('방금전');
+
                         update_time = '방금전'
                     }
 
@@ -202,7 +202,7 @@
     </script>
 </head>
 
-<body>
+<body style="-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none">
     <div class="container">
         <section class="hero is-small is-success">
             <div class="hero-body">
